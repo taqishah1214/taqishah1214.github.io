@@ -5,8 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Taqi Shah · Senior .NET &amp; AI Engineer</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Taqi Shah, Senior .NET &amp; AI Engineer and Technical Lead. A 3D desk you can walk around: projects on the monitor, experience on the pinboard, contact on the phone.">
+<meta name="description" content="Taqi Shah, Senior .NET &amp; AI Engineer with 11 years in enterprise .NET: microservices, ABP.io, Angular, IoT and AI agents. Open to freelance, contract and full-time work.">
 <meta name="theme-color" content="#0d0f1d">
+<!-- CLIENT-READY: search and link previews (LinkedIn, WhatsApp, Slack, X) -->
+<link rel="canonical" href="https://taqishah.dev/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b8a4ff'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' text-anchor='middle' fill='%2317122b'%3ETS%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Taqi Shah">
+<meta property="og:url" content="https://taqishah.dev/">
+<meta property="og:title" content="Taqi Shah · Senior .NET &amp; AI Engineer">
+<meta property="og:description" content="Taqi Shah, Senior .NET &amp; AI Engineer with 11 years in enterprise .NET: microservices, ABP.io, Angular, IoT and AI agents. Open to freelance, contract and full-time work.">
+<meta property="og:image" content="https://taqishah.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Taqi Shah, Senior .NET and AI Engineer">
+<meta property="profile:first_name" content="Taqi">
+<meta property="profile:last_name" content="Shah">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Taqi Shah · Senior .NET &amp; AI Engineer">
+<meta name="twitter:description" content="Taqi Shah, Senior .NET &amp; AI Engineer with 11 years in enterprise .NET: microservices, ABP.io, Angular, IoT and AI agents. Open to freelance, contract and full-time work.">
+<meta name="twitter:image" content="https://taqishah.dev/og.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Taqi Shah","url":"https://taqishah.dev/","image":"https://taqishah.dev/og.png",
+ "jobTitle":"Senior .NET & AI Engineer","email":"mailto:taqish12@gmail.com",
+ "address":{"@type":"PostalAddress","addressCountry":"PK"},
+ "alumniOf":{"@type":"CollegeOrUniversity","name":"University of Sargodha"},
+ "worksFor":{"@type":"Organization","name":"Systems Limited"},
+ "knowsAbout":[".NET","C#","ASP.NET Core","ABP.io","Microservices","Domain-driven design","Angular","RabbitMQ","Kubernetes","AWS IoT Core","Semantic Kernel","Multi-agent AI","RAG"],
+ "knowsLanguage":["English","Urdu","Punjabi"],
+ "sameAs":["https://www.linkedin.com/in/taqi-shah-806b0214a/","https://github.com/taqishah1214"]}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
@@ -188,6 +216,13 @@ kbd{font-family:var(--f-mono)}
 #loader.gone .enter{pointer-events:none}
 #main[tabindex="-1"]:focus{outline:none}   /* focus lands here after the loader (boot.js landFocus); the next Tab goes on to the Sections menu */
 .enter .pill{min-height:44px;padding:0 22px;font-size:12.5px}
+/* CLIENT-READY: "In a hurry?" link to the quick view, in the buttons' place until the room is ready */
+.boot{position:relative}
+.ld-skip{position:absolute;left:0;right:0;bottom:0;min-height:44px;margin:0;padding-top:10px;text-align:center;line-height:1.5;
+  font-size:13px;color:var(--muted);transition:opacity .4s ease,visibility 0s}
+.ld-skip button{font:inherit;color:var(--accent);background:none;border:0;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.ld-skip button:hover{color:var(--fg)}
+#loader.ready .ld-skip{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility 0s .3s}
 .enter .pill.solid{animation:glowPulse 2.4s ease-in-out 1s infinite}
 @keyframes glowPulse{50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 0 0 1px rgba(184,164,255,.6),0 10px 40px rgba(140,110,255,.6)}}
 .kbd-hint{flex-basis:100%;text-align:center;margin-top:4px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:#6f6b92}
@@ -241,6 +276,17 @@ kbd{font-family:var(--f-mono)}
 .hero.sig .here{display:flex;align-items:center;gap:8px;margin-top:9px;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#bdb8d6;text-shadow:0 1px 8px rgba(0,0,0,.7)}
 .hero.sig .here .tz{color:#9894b8}
 .hero.sig .here .live{width:6px;height:6px}
+/* CLIENT-READY: availability pill under the signature (room view only); opens Contact */
+.hero .hire{display:none}
+.hero.sig .hire{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;max-width:min(360px,calc(100vw - 48px));margin-top:12px;padding:6px 6px 6px 11px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(134,227,181,.35);background:rgba(16,30,28,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#dff7ea;font:500 12px/1.25 var(--f-body,inherit);text-align:left}
+.hero.sig .hire .live{width:6px;height:6px}
+.hero.sig .hire span{min-width:0}
+.hero.sig .hire .s{display:none}
+.hero.sig .hire b{display:inline-flex;align-items:center;gap:4px;flex:none;padding:5px 9px;border-radius:999px;background:var(--ok);color:#0d2a1d;font:700 11px/1 var(--f-mono)}
+.hero.sig .hire b svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.hero.sig .hire:hover{border-color:rgba(134,227,181,.7)}
+.hero.sig .hire:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
 .hero.sig .flat-link{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:5px 10px 5px 8px;border-radius:999px;border:1px solid var(--stroke);background:rgba(16,18,36,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
   font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s,background .2s}
 .hero .flat-link svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
@@ -1383,6 +1429,38 @@ html:not(.flat) .ct-screen{container-type:size}
   html:not(.flat) .ct-row .v{font-size:clamp(11.5px,calc((55.5cqi - 132px) / 12.4),14px)}
 }
 
+/* CLIENT-READY: availability, "What I can help with" and the message form, a second card under the contact card */
+.ct-card.ct-hire,html:not(.flat) .ct-card.ct-hire{display:block;padding:14px 14px 12px}
+.ct-avail{display:flex;align-items:flex-start;gap:9px;margin:0 2px 4px;font-size:13.5px;line-height:1.4;font-weight:500;color:#dff7ea}
+.ct-avail .live{width:7px;height:7px;margin-top:6px}
+.ct-h{margin:14px 2px 8px;font-family:var(--f-mono);font-size:10px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.ct-avail+.ct-h{margin-top:12px}
+.ct-hire>.ct-h:first-child,.ct-form>.ct-h:first-child{margin-top:2px}
+.ct-help{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ct-help li{position:relative;padding:0 2px 0 16px;font-size:12.5px;line-height:1.45;color:rgba(239,236,246,.88)}
+.ct-help li::before{content:"";position:absolute;left:3px;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.ct-form{display:grid;gap:8px;margin-top:4px}
+.ct-help+.ct-form{margin-top:10px;padding-top:4px;border-top:1px solid rgba(255,255,255,.08)}
+.ct-topics{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;border:0;min-width:0}
+.ct-topics label{position:relative;cursor:pointer}
+.ct-topics input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.ct-topics span{display:block;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);font-size:11.5px;color:rgba(239,236,246,.85);transition:background .2s,border-color .2s,color .2s}
+.ct-topics input:checked+span{border-color:transparent;background:var(--accent);color:var(--accent-ink);font-weight:600}
+.ct-topics input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.ct-f{display:block}
+.ct-f input,.ct-f textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(8,6,24,.45);
+  color:#f4f1fb;font:inherit;font-size:14px;line-height:1.4;resize:vertical;transition:border-color .2s,background .2s}
+.ct-f textarea{min-height:84px}
+.ct-f input::placeholder,.ct-f textarea::placeholder{color:rgba(239,236,246,.45)}
+.ct-f input:focus,.ct-f textarea:focus{outline:none;border-color:var(--accent);background:rgba(8,6,24,.65)}
+.ct-send{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border:0;border-radius:14px;cursor:pointer;
+  background:linear-gradient(180deg,#d2c5ff,#a993ff);color:var(--accent-ink);font:700 13px/1 var(--f-mono);letter-spacing:.02em;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 22px rgba(140,110,255,.3)}
+.ct-send .ct-ico{width:16px;height:16px}
+.ct-send:hover{background:linear-gradient(180deg,#ddd3ff,#b6a2ff)}
+.ct-send:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.ct-send:disabled{opacity:.6;cursor:progress}
+.ct-fnote{margin:0 2px;font-size:11px;line-height:1.4;color:var(--muted)}
+
 /* ==== css/music.css ==== */
 /* =====================================================================
    Music on/off (js/audio.js): top right of the room, under the section pager while a section is open.
@@ -1476,7 +1554,7 @@ html.flat .hero .meta{grid-area:meta;display:inline-flex;margin-bottom:26px}
 html.flat .hero h1{grid-area:name;font-size:clamp(56px,11.4vw,148px);line-height:.88;letter-spacing:-.035em;filter:drop-shadow(0 0 40px rgba(150,120,255,.3));animation-delay:.05s}
 html.flat .hero .line{grid-area:line;margin-top:30px;font-size:clamp(19px,2.3vw,26px);line-height:1.35;color:#e6e1f7;max-width:22em;animation-delay:.12s}
 html.flat .hero .line i{display:none}
-html.flat .hero .role,html.flat .hero .here,html.flat .hero .flat-link{display:none}
+html.flat .hero .role,html.flat .hero .here,html.flat .hero .flat-link,html.flat .hero .hire{display:none}
 html.flat .hero .cta{grid-area:cta;display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;animation-delay:.2s}
 /* email: the address itself, copied on click */
 html.flat .hero .cta .pill{padding:0 15px}
@@ -1583,6 +1661,9 @@ html.flat .flat-foot{display:block;max-width:1080px;margin:130px auto 0;padding:
   .hero.sig .role{font-size:12px;margin-top:5px}
   .hero.sig .here{font-size:10px;margin-top:7px}
   .hero.sig .flat-link{margin-top:10px}
+  .hero.sig .hire{margin-top:9px;font-size:11.5px;max-width:calc(100vw - 32px)}
+  .hero.sig .hire .l{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}   /* phones: the short label shows, the full line stays for screen readers */
+  .hero.sig .hire .s{display:inline}
   .hero.intro{padding-bottom:12vh}
   .drag-hint{bottom:calc(var(--safe-b) + 86px)}
   .dh-t small{display:none}
@@ -1753,9 +1834,10 @@ html.lowfx .hero.sig.in>*,html.lowfx .hero.sig.in h1 .c,html.lowfx .pg-now.swap 
     </div>
     <div class="enter" id="enter">
       <button class="pill solid" type="button" id="go">Enter the room<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      <button class="pill ghost" type="button" id="goflat">Flat version</button>
+      <button class="pill ghost" type="button" id="goflat" data-track="quick-view">Quick view (no 3D)</button>
       <span class="kbd-hint" aria-hidden="true"><kbd>Enter</kbd> to start</span>
     </div>
+    <p class="ld-skip" id="ldskip">In a hurry? <button type="button" id="ldquick" data-track="quick-view-loader">Open the quick view</button>, every section on one page, no 3D.</p>
   </div>
   <div class="ld-foot" aria-hidden="true"><span class="ld-role"></span><span class="ld-hint">Best with a mouse or trackpad. Works on phones too.</span></div>
 </div>
@@ -1772,7 +1854,8 @@ html.lowfx .hero.sig.in>*,html.lowfx .hero.sig.in h1 .c,html.lowfx .pg-now.swap 
   <p class="here" id="hhere"></p>
   <div class="cta" id="hcta"></div>
   <dl class="facts" id="hfacts"></dl>
-  <button class="flat-link" type="button" id="toflat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Flat version</button>
+  <button class="hire" type="button" id="hhire" data-go="contact" data-track="hire-pill"></button>
+  <button class="flat-link" type="button" id="toflat" data-track="quick-view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Quick view</button>
 </header>
 
 <div class="drag-hint" id="hint" aria-hidden="true">
@@ -1839,6 +1922,17 @@ const ME = {
   spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWQRwui0ExPn", // the room's music: a Spotify playlist, album or track link (null plays the built-in lo-fi loop). For now Spotify's own "lofi beats" playlist, until Taqi sends his
   aiChat: "",                     // the AI chat's address (chat-worker/ in the site repo, e.g. "https://taqishah-chat.<you>.workers.dev"); "" keeps the robot on its own rules
   resume: null,                   // "resume.pdf" (a file next to index.html) shows the links; null hides them. Hidden until Taqi sends a PDF without his phone number and with the LinkedIn roles
+  /* CLIENT-READY: hiring details. available/services are DRAFTS until Taqi confirms the wording */
+  available: "Open to freelance and contract projects, and to full-time roles",   // the availability line (hero, phone, chat); "" hides it
+  services: [                     // "What I can help with" on the phone; [] hides it
+    ".NET microservices and architecture: ABP.io, DDD, gateways, SSO, RabbitMQ, Kubernetes",
+    "AI in .NET systems: agents, RAG and LLM integration with Semantic Kernel and Microsoft.Extensions.AI",
+    "Real-time and IoT backends: SignalR, MQTT, AWS IoT Core",
+    "Technical leadership: architecture reviews, code reviews, mentoring and delivery",
+  ],
+  booking: "",                    // a Cal.com or Calendly link shows "Book a call"; "" hides it
+  form: "",                       // a Formspree endpoint ("https://formspree.io/f/...") makes the contact form send directly; "" opens the visitor's email app with the message filled in
+  analytics: "",                  // a GoatCounter code (the "taqishah" in taqishah.goatcounter.com) turns on visit and click counts; "" = no analytics
   avatar: "data:image/png;base64,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juzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzIjuzILi67y47syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7syI7s4rK77MZuHdMAAMJQFFywgSYMMWIITRhhqgEICZD7Uw308mAHO9jBDnawgx3sYAc72MEOdrCD3SXYpTiOr9cRp5mt779XKi3HqeyUnbJTdspur+xgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jB7lXsJrt1UAIAAAJBEPuXvQi+7ODB/DbBsLCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GD3BrtJcu3snJ2zc3bOztk5O2fn7JrPDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYwQ52sIMd7GAHO9jBDnawgx3sYAc72MEOdrCDHexgBzvYdWLn7Jyds3N2zs7ZOTtn5+ycnbNzds7O2Tk7Z+fsnJ2zc3aNZ7cDAFhDF/ClcnXMAAAAAElFTkSuQmCC",
   status: "Principal Consultant, Development at Systems Limited",
   bio: [
@@ -2089,6 +2183,26 @@ function tickLive(force){
 function seeded(n){ let s=n*9301+49297; return ()=>((s=(s*9301+49297)%233280)/233280); }
 /* Per-section event wiring. Each ui-*.js may register WIRE[key] = el => {...}; it runs after every mount. */
 const WIRE = {};
+
+/* ---------- CLIENT-READY: analytics (GoatCounter, no cookies), off until ME.analytics is set ----------
+   Page views count on load; clicks on the ways to reach Taqi count as events (email, call, form, LinkedIn, GitHub, résumé). */
+function track(name){ try{ window.goatcounter && window.goatcounter.count && window.goatcounter.count({path:"click/"+name, title:name, event:true}); }catch(e){} }
+if(ME.analytics && /^[a-z0-9-]+$/i.test(ME.analytics) && /^https?:$/.test(location.protocol)){
+  const s=document.createElement("script"); s.async=true; s.src="https://gc.zgo.at/count.js";
+  s.dataset.goatcounter=`https://${ME.analytics}.goatcounter.com/count`; document.head.appendChild(s);
+}
+document.addEventListener("click", e => {
+  const el = e.target.closest("a,button"); if(!el) return;
+  const href = el.getAttribute("href") || "";
+  const name = el.dataset.track
+    || (el.hasAttribute("data-mail") || el.dataset.what==="email address" ? "email-copy" : "")
+    || (href.startsWith("mailto:") ? "email" : "")
+    || (ME.booking && href===ME.booking ? "book-call" : "")
+    || (ME.resume && href===ME.resume ? "resume" : "")
+    || (/linkedin\.com/.test(href) ? "linkedin" : "")
+    || (/github\.com/.test(href) ? "github" : "");
+  if(name) track(name);
+}, true);
 
 /* ==== js/ui-projects.js ==== */
 /* =====================================================================
@@ -3269,7 +3383,7 @@ function botAnswer(q){
     const t=terms?` His ${orgOf(terms.e.org)} role is listed as ${terms.m[0].toLowerCase()}; beyond that the site doesn't say`:" The site doesn't say";
     return `He is based in ${ME.location}.${t} whether he works remotely, would relocate or needs a visa, ${direct}`;
   }
-  if(/\bopen to\b|\bavailab|\bhire\b|\bhiring\b|\bfreelanc|\bcontract(or)?\b|\bfull[- ]time\b|\bpart[- ]time\b|\bjob offer\b|\bopportunit|\blooking for (a )?(new )?(job|work|role)\b/.test(q)) return `The site doesn't say whether he's taking on new work, ${direct}`;
+  if(/\bopen to\b|\bavailab|\bhire\b|\bhiring\b|\bfreelanc|\bcontract(or)?\b|\bfull[- ]time\b|\bpart[- ]time\b|\bjob offer\b|\bopportunit|\blooking for (a )?(new )?(job|work|role)\b/.test(q)) return ME.available ? `He is ${ME.available.charAt(0).toLowerCase()+ME.available.slice(1).replace(/[.\s]+$/,"")}. For dates and rates, use the form on the phone (Contact) or email ${ME.email}.` : `The site doesn't say whether he's taking on new work, ${direct}`;
   // places outside Pakistan: the data only names a client's country
   if(/\b(abroad|overseas|outside (of )?pakistan|other countries|internationally|foreign (clients?|companies|countries))\b/.test(q)){
     const emp=jobs.filter(e=>/,\s*[^,]+$/.test(e.org)).map(e=>`${roleOf(e)} at ${orgOf(e.org)} ${/\b(present|now)\b/i.test(e.when)?`since ${since(e)}`:`(${e.when})`}`);
@@ -3334,6 +3448,8 @@ const CT_ICON = {
   pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
   out:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   torch:'<path d="M8 2h8v4l-2 4v12h-4V10L8 6z"/><path d="M12 13v3"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  send:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',
   camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
 };
 const ctIcon = (k, cls="") => `<svg class="ct-ico ${cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${CT_ICON[k]}</svg>`;
@@ -3351,6 +3467,7 @@ function renderContact(){
   const ghUrl = `https://github.com/${ME.github}`;
   const where = ME.timezone ? `Local time in ${esc(ME.location||"his city")}` : "Your local time";
   const quick = [
+    ME.booking ? ctQuick("cal","Book a call",ME.booking,true) : "",
     ME.email ? ctQuick("mail","Email",`mailto:${ME.email}`) : "",
     ME.phone ? ctQuick("phone","Call",`tel:${ME.phone.replace(/[^+\d]/g,"")}`) : "",
     ctQuick("github","GitHub",ghUrl,true),
@@ -3387,9 +3504,51 @@ function renderContact(){
             ${ME.resume ? ctRow("doc","Résumé",`<a href="${esc(ME.resume)}" target="_blank" rel="noopener">Open the PDF ${ctIcon("out","ct-out")}</a>`) : ""}
           </ul>
         </article>
+        ${ctHire()}
       </div>
       <div class="ct-dock" aria-hidden="true"><span class="ct-fab">${ctIcon("torch")}</span><i class="ct-home"></i><span class="ct-fab">${ctIcon("camera")}</span></div>
     </div>`;
+}
+
+/* CLIENT-READY: availability, what Taqi can help with, and a message form under the contact card.
+   The form posts to ME.form (Formspree) when set; otherwise it opens the visitor's email app with the message filled in. */
+const CT_TOPICS = ["Freelance project", "Job opportunity", "Something else"];
+function ctHire(){
+  const avail = ME.available ? `<p class="ct-avail"><i class="live" aria-hidden="true"></i>${esc(ME.available)}</p>` : "";
+  const help = (ME.services||[]).length ? `<h4 class="ct-h">What I can help with</h4><ul class="ct-help">${ME.services.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  if(!ME.email && !ME.form) return avail || help ? `<section class="ct-card ct-hire">${avail}${help}</section>` : "";
+  return `<section class="ct-card ct-hire" aria-label="Work with ${esc(ME.first||ME.name)}">
+      ${avail}${help}
+      <form class="ct-form" data-cform novalidate>
+        <h4 class="ct-h">Send a message</h4>
+        <fieldset class="ct-topics"><legend class="sr">What is it about?</legend>${CT_TOPICS.map((t,k)=>`<label><input type="radio" name="topic" value="${esc(t)}"${k?"":" checked"}><span>${esc(t)}</span></label>`).join("")}</fieldset>
+        <label class="ct-f"><span class="sr">Your name</span><input name="name" autocomplete="name" placeholder="Your name" required maxlength="120"></label>
+        <label class="ct-f"><span class="sr">Your email</span><input name="email" type="email" autocomplete="email" placeholder="Your email" required maxlength="200"></label>
+        <label class="ct-f"><span class="sr">Message</span><textarea name="message" rows="4" placeholder="What are you working on? Timeline and budget help." required maxlength="4000"></textarea></label>
+        <button type="submit" class="ct-send">${ctIcon("send")}<span>Send</span></button>
+        <p class="ct-fnote">${ME.form ? "Goes straight to Taqi's inbox." : "Opens your email app with this message, ready to send."}</p>
+      </form>
+    </section>`;
+}
+function ctWireForm(el, say){
+  const f = $("[data-cform]", el); if(!f) return;
+  f.addEventListener("submit", e => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(f)), bad = [...f.querySelectorAll("input[required],textarea[required]")].find(x=>!x.value.trim() || !x.checkValidity());
+    if(bad){ bad.focus(); say(bad.name==="email" ? "Please add a valid email" : bad.name==="name" ? "Please add your name" : "Please write a message", false); return; }
+    const subject = `${d.topic} from ${d.name.trim()} (via taqishah.dev)`;
+    track("contact-form");
+    if(ME.form){
+      const btn = $(".ct-send", f); btn.disabled = true;
+      fetch(ME.form, {method:"POST", headers:{"Accept":"application/json","Content-Type":"application/json"}, body:JSON.stringify({...d, _subject:subject, _replyto:d.email})})
+        .then(r=>{ if(!r.ok) throw 0; f.reset(); say("Sent. Taqi will reply by email."); })
+        .catch(()=>say(`Couldn't send. Email ${ME.email} instead.`, false))
+        .finally(()=>{ btn.disabled = false; });
+      return;
+    }
+    location.href = `mailto:${ME.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${d.message.trim()}\n\n${d.name.trim()}\n${d.email.trim()}`)}`;
+    say("Opening your email app");
+  });
 }
 
 /* long date on the lock screen, refreshed with the clocks */
@@ -3401,6 +3560,7 @@ WIRE.contact = el => {
   const toast = $(".ct-toast", el), tt = $(".ct-tt", el);
   let toastT = null;
   const say = (msg, ok=true) => { tt.textContent = msg; toast.classList.toggle("warn", !ok); toast.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(()=>toast.classList.remove("on"), 2200); };
+  ctWireForm(el, say);
   $$("[data-ccopy]", el).forEach(b => b.addEventListener("click", () => {
     const text = b.dataset.ccopy, what = b.dataset.what || "text";
     const Cap = what.charAt(0).toUpperCase() + what.slice(1);
@@ -3463,6 +3623,8 @@ const ICON = {
   person:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>',
   cube:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>',
   up:'<path d="M12 19V5M6 11l6-6 6 6"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
 };
 const svgI = (k, cls="") => `<svg viewBox="0 0 24 24" aria-hidden="true"${cls?` class="${cls}"`:""}>${ICON[k]}</svg>`;
 const FLAT_DESC = {
@@ -3508,14 +3670,23 @@ function buildChrome(){
   const tz = tzShort();
   $("#hhere").innerHTML = `<i class="live" aria-hidden="true"></i>${ME.location?`<span>${esc(ME.location)}</span>`:""}<span class="clk" data-hmlive></span>${tz?`<span class="tz">${esc(tz)}</span>`:""}`;
   const mailBtn = (cls, icon) => ME.email ? `<button type="button" class="${cls}" data-mail>${icon?svgI("mail"):""}<span class="v">${esc(ME.email)}</span><span class="cp" aria-hidden="true"><svg viewBox="0 0 24 24" class="i-c">${COPY_I}</svg><svg viewBox="0 0 24 24" class="i-ok">${OK_I}</svg></span><span class="sr"> (copy)</span></button>` : "";
-  $("#hcta").innerHTML = mailBtn("pill solid mail", true)
+  /* CLIENT-READY: "Let's talk" opens Contact (the form and services); "Book a call" when ME.booking is set */
+  $("#hcta").innerHTML = `<button type="button" class="pill solid" data-go="contact" data-track="lets-talk">${svgI("chat")}Let's talk</button>`
+    + (ME.booking ? `<a class="pill" href="${esc(ME.booking)}" target="_blank" rel="noopener">${svgI("cal")}Book a call</a>` : "")
+    + mailBtn("pill mail", true)
     + links().map((l,n)=>`<a class="pill${n===0&&!ME.email?" solid":""}" href="${esc(l.h)}"${l.ext?' target="_blank" rel="noopener"':""}>${svgI(l.k)}${esc(l.t)}</a>`).join("");
   $("#hfacts").innerHTML = [
+    ["Open to", ME.available && esc(ME.available)],
     ["Now", ME.status && esc(ME.status)],
     ["Roles", ME.roles && esc(ME.roles)],
     ["Based", ME.location && `${esc(ME.location)} <span class="clk" data-hmlive></span>${tz?` <span class="tz">${esc(tz)}</span>`:""}`],
     ["Speaks", ME.languages && esc(ME.languages)],
   ].filter(r=>r[1]).map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+
+  /* CLIENT-READY: availability pill in the corner signature (room view); opens Contact */
+  const hire=$("#hhire");
+  if(hire){ if(ME.available){ hire.innerHTML=`<i class="live" aria-hidden="true"></i><span class="l">${esc(ME.available)}</span><span class="s" aria-hidden="true">Open to work</span><b>Let's talk${svgI("arrow")}</b>`; } else hire.hidden=true; }
+  $("#hero").addEventListener("click",e=>{ const k=e.target.closest("[data-go]")?.dataset.go; if(k) go(k); });
 
   /* loader corners */
   $(".ld-who").textContent = `${ME.name} · Portfolio`;
@@ -5335,6 +5506,8 @@ function bkTodayIs(M){
 function bkDescClause(r, M){ const p = (r.desc || [])[0]; return p ? bkClause(p, r.present, M) : ""; }
 
 /* everything the bot may know, read fresh from the data.js globals */
+/* CLIENT-READY: ME.available ("Open to freelance ...") as a clause: "open to freelance ..." */
+function bkAvail(){ const a = typeof ME !== "undefined" && ME && ME.available ? bkStrip(String(ME.available)).replace(/[.\s]+$/,"") : ""; return a ? a.charAt(0).toLowerCase() + a.slice(1) : ""; }
 function bkModel(){
   const me = (typeof ME !== "undefined" && ME) ? ME : {};
   const P = (typeof PROJECTS !== "undefined" && Array.isArray(PROJECTS)) ? PROJECTS : [];
@@ -8736,7 +8909,7 @@ function bkAnswer(question){
     + (bkOpinionRe.test(qn) ? "The site doesn't give his opinions or preferences. " : "")
     /* "why did he use Kafka": the data says where, never why */
     + (/^ (why|whys|how come) /.test(qn) && !bkOpinionRe.test(qn) ? "The site doesn't give his reasons. " : "")
-    + (bkHireRe.test(qn) ? (bkRateRe.test(qn) ? "The site doesn't list his rates" : "The site doesn't say whether he is available for new work") + (M.email ? ", so ask him directly at " + M.email : "") + ". " : "");
+    + (bkHireRe.test(qn) ? (bkRateRe.test(qn) ? "The site doesn't list his rates" : bkAvail() ? "He is " + bkAvail() : "The site doesn't say whether he is available for new work") + (M.email ? (bkAvail() && !bkRateRe.test(qn) ? ". Use the form on the phone (Contact) or email him at " : ", so ask him directly at ") + M.email : "") + ". " : "");
   const preN = bkSentences(pre.trim()).filter(Boolean).length > 1 || bkHireRe.test(qn) ? 1 : 2;
   const finish = s => s && pre ? pre + bkSentences(s).slice(0, preN).join(" ").replace(/, so email \S+ for specifics\.$/, (m) => pre.indexOf(M.email) >= 0 ? "." : m) : s;
   const wh2 = soft || !!pre;
@@ -8993,6 +9166,9 @@ function botFacts(){
   L.push("Based in: "+ME.location+" (time zone "+(ME.timezone||"not given")+").");
   L.push("Languages spoken: "+ME.languages+".");
   L.push("Email: "+ME.email+". LinkedIn: "+ME.linkedin+". GitHub: https://github.com/"+ME.github+".");
+  if(ME.available) L.push("Availability: "+txt(ME.available)+". Rates are not on the site; ask by email.");
+  if(ME.services && ME.services.length) L.push("What he offers clients: "+ME.services.map(txt).join("; ")+".");
+  L.push("Contact form: on the phone (Contact section); it sends a message to his email."+(ME.booking?" Book a call: "+ME.booking:""));
   L.push("Phone number: not published on the site. Résumé file: "+(ME.resume?"available on the site":"not on the site right now")+".");
   L.push("", "## Bio"); ME.bio.forEach(b=>L.push(txt(b)));
   L.push("", "## Skills"); Object.keys(ME.skills).forEach(k=>L.push(k+": "+txt(ME.skills[k])));
@@ -14517,6 +14693,7 @@ if(!hasGL || store.get("view")==="flat"){
   };
   $("#go").addEventListener("click",enter);
   $("#goflat").addEventListener("click",()=>{ toFlat(); landFocus(); });
+  $("#ldquick").addEventListener("click",()=>{ toFlat(); landFocus(); });   // CLIENT-READY: the quick view, before the room is ready
 }
 
 

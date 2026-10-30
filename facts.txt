@@ -5,6 +5,9 @@ Tagline: Enterprise .NET, shipped to production.
 Based in: Pakistan (time zone Asia/Karachi).
 Languages spoken: English, Urdu, Punjabi.
 Email: taqish12@gmail.com. LinkedIn: https://www.linkedin.com/in/taqi-shah-806b0214a/. GitHub: https://github.com/taqishah1214.
+Availability: Open to freelance and contract projects, and to full-time roles. Rates are not on the site; ask by email.
+What he offers clients: .NET microservices and architecture: ABP.io, DDD, gateways, SSO, RabbitMQ, Kubernetes; AI in .NET systems: agents, RAG and LLM integration with Semantic Kernel and Microsoft.Extensions.AI; Real-time and IoT backends: SignalR, MQTT, AWS IoT Core; Technical leadership: architecture reviews, code reviews, mentoring and delivery.
+Contact form: on the phone (Contact section); it sends a message to his email.
 Phone number: not published on the site. Résumé file: not on the site right now.
 
 ## Bio

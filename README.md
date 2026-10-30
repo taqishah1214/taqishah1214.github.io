@@ -30,6 +30,15 @@ Everything personal is in the block marked `EDIT ME` at the top of the main `<sc
 
 The chat bot reads the same block, so adding a skill or a project there is enough for it to answer about it. It never claims anything that isn't listed.
 `aiChat` (empty for now) is the address of the AI chat in `chat-worker/` of the site repo. When it is set, questions the bot's rules can't answer go to Claude, which answers only from `facts.txt`; any failure keeps the rule answer. Setup steps are in `chat-worker/README.md`. After changing this block, rebuild `facts.txt` too (`node out/bot/facts.js > facts.txt`) and publish it next to `index.html`.
+Hiring details, also in `ME`:
+- `available`: the availability line (hero facts, a "Let's talk" pill in the room's corner, the phone, the chat bot). `""` hides it.
+- `services`: the "What I can help with" list on the phone.
+- `booking`: a Cal.com or Calendly link adds "Book a call" to the hero and the phone.
+- `form`: a Formspree endpoint makes the phone's message form send directly; empty, the form opens the visitor's email app with the message filled in.
+- `analytics`: a GoatCounter code (free, no cookies) counts visits and clicks on email, the form, LinkedIn, GitHub, résumé and "Book a call".
+
+Link previews and search: `og.png` (1200×630) is the preview image for LinkedIn, WhatsApp and X; `robots.txt` and `sitemap.xml` sit next to `index.html`. The meta tags and Person data are in the page head.
+
 `ph("...")` renders a highlighted placeholder if you want to mark something as unfinished.
 Your phone number is left off the site on purpose; set `phone` in `ME` to show it on the phone card.
 
