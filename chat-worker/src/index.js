@@ -1,5 +1,8 @@
 /* The AI chat behind the robot on taqishah.dev. The site asks here only when its own rules have no answer, and falls
-   back to its rule answer when this returns anything but {answer}. Facts about Taqi come only from FACTS_URL. */
+   back to its rule answer when this returns anything but {answer}. Facts about Taqi come only from FACTS_URL.
+   With no ANTHROPIC_API_KEY secret it runs on Cloudflare Workers AI's free daily allowance (AI_MODEL); once the
+   allowance is used up the calls fail and the site keeps its rule answers until it resets at 00:00 UTC. Adding the
+   secret switches it to Claude (MODEL). */
 import Anthropic from "@anthropic-ai/sdk";
 
 const MAX_Q = 500, MAX_TURNS = 6, MAX_TURN_CHARS = 800;
@@ -23,6 +26,26 @@ async function facts(env) {
   const text = (await r.text()).slice(0, 40000);
   factsCache = { text, at: Date.now() };
   return text;
+}
+
+// the free path: an open model on Workers AI. Its reply comes back as {response}, chat completions or Responses
+// API output depending on the model, so the text is read from whichever is there
+async function workersAI(env, factsText, history, q) {
+  const r = await env.AI.run(env.AI_MODEL || "@cf/openai/gpt-oss-120b", {
+    messages: [
+      { role: "system", content: RULES + "\n\n<facts>\n" + factsText + "\n</facts>" },
+      ...history,
+      { role: "user", content: q },
+    ],
+    max_tokens: 1500,
+  });
+  if (typeof r === "string") return r.trim();
+  if (typeof r?.response === "string") return r.response.trim();
+  const choice = r?.choices?.[0]?.message?.content;
+  if (typeof choice === "string") return choice.trim();
+  const out = (r?.output || []).filter(o => o?.type === "message").flatMap(o => o.content || [])
+    .filter(c => c?.type === "output_text").map(c => c.text).join("");
+  return out.trim();
 }
 
 function cors(origin) {
@@ -68,6 +91,12 @@ export default {
     if (history.length && history[history.length - 1].role === "user") history.pop();
 
     try {
+      const factsText = await facts(env);
+      if (!env.ANTHROPIC_API_KEY) {
+        const answer = await workersAI(env, factsText, history, q);
+        if (!answer) return json({ error: "empty answer" }, 502, h);
+        return json({ answer: answer.slice(0, 1200) }, 200, h);
+      }
       const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY, baseURL: env.ANTHROPIC_BASE_URL || undefined });
       const msg = await client.messages.create({
         model: env.MODEL || "claude-opus-5-5",
@@ -76,7 +105,7 @@ export default {
         system: [
           { type: "text", text: RULES },
           // the facts change rarely, so they are cached between visitors
-          { type: "text", text: "<facts>\n" + (await facts(env)) + "\n</facts>", cache_control: { type: "ephemeral" } },
+          { type: "text", text: "<facts>\n" + factsText + "\n</facts>", cache_control: { type: "ephemeral" } },
         ],
         messages: [...history, { role: "user", content: q }],
       });

@@ -4,8 +4,14 @@ main = "src/index.js"
 compatibility_date = "2026-10-01"
 compatibility_flags = ["nodejs_compat"]
 
+# Cloudflare Workers AI: free up to 10,000 Neurons a day, used while there is no ANTHROPIC_API_KEY secret
+[ai]
+binding = "AI"
+
 [vars]
-# claude-opus-5-5 gives the best answers; claude-haiku-5-5 costs far less per question
+# the free model on Workers AI (another option: "@cf/meta/llama-3.3-70b-instruct-fp8-fast")
+AI_MODEL = "@cf/openai/gpt-oss-120b"
+# used once an ANTHROPIC_API_KEY secret is added: claude-opus-5-5 gives the best answers, claude-haiku-5-5 costs far less
 MODEL = "claude-opus-5-5"
 # the facts the robot answers from, built from data.js (see README.md)
 FACTS_URL = "https://taqishah.dev/facts.txt"
