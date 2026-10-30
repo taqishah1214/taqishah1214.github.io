@@ -1,0 +1,22 @@
+# The AI chat behind the robot on taqishah.dev. Setup steps: README.md in this folder.
+name = "taqishah-chat"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# claude-opus-5-5 gives the best answers; claude-haiku-5-5 costs far less per question
+MODEL = "claude-opus-5-5"
+# the facts the robot answers from, built from data.js (see README.md)
+FACTS_URL = "https://taqishah.dev/facts.txt"
+# pages allowed to call this chat, comma separated
+ALLOWED_ORIGINS = "https://taqishah.dev,https://www.taqishah.dev,https://taqishah1214.github.io"
+
+# each visitor (by IP) gets at most 10 questions a minute
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 10
+  period = 60

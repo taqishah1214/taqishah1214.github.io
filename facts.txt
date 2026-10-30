@@ -1,0 +1,146 @@
+# Taqi Shah
+Title: Senior .NET & AI Engineer. Also: Technical Team Lead · Senior Architect.
+Current status: Principal Consultant, Development at Systems Limited.
+Tagline: Enterprise .NET, shipped to production.
+Based in: Pakistan (time zone Asia/Karachi).
+Languages spoken: English, Urdu, Punjabi.
+Email: taqish12@gmail.com. LinkedIn: https://www.linkedin.com/in/taqi-shah-806b0214a/. GitHub: https://github.com/taqishah1214.
+Phone number: not published on the site. Résumé file: not on the site right now.
+
+## Bio
+I'm Taqi, a Senior .NET & AI Engineer and Technical Lead with 11 years of experience delivering enterprise applications: microservices, micro-frontends and IoT platforms.
+I started in August 2016 at Solvefy, building ASP.NET Zero SaaS apps for hotels and aviation, with a B.S. in Computer Science from the University of Sargodha. Since then I've shipped for finance, retail, reinsurance, water treatment and government: six and a half years at Techverx over two stints, up to Principal Software Engineer, and a year at Systems Limited on a reinsurance platform. Today I'm a Principal Consultant at Systems Limited, Technical Team Lead for the Ministry of Tourism of Saudi Arabia, and Senior Architect at Aroma Retail.
+My work covers the whole path: service design, gateways and SSO, hands-on C# and Angular, messaging, CI/CD, and the dashboards that tell you production is fine. I review code and mentor the engineers around me.
+I also build AI platforms on .NET and Python: multi-agent orchestration, an autonomous software-engineering pipeline, AI-driven data migration, and ML for predictive maintenance.
+
+## Skills
+backend: C#, .NET 10 / 9, .NET Core, ASP.NET Core, ABP.io, ASP.NET Zero / Boilerplate, REST, gRPC, SignalR, MediatR, CQRS
+frontend: Angular, AngularJS, TypeScript, JavaScript, Next.js, Electron, NgRx, micro-frontends, Angular Material, AG Grid, PrimeNG
+architecture: Microservices, domain-driven design (DDD), micro-frontends, API gateways, OpenIddict / OIDC, SSO, service-to-service integration, shared services
+data: SQL Server, PostgreSQL, MySQL, MongoDB, EF Core, Dapper, RabbitMQ, Kafka, MassTransit, Redis, Quartz.NET
+cloud: AWS (EC2, ECR, RDS, App Runner, IoT Core), Azure, Docker, Kubernetes, Nginx, GitHub Actions, Jenkins, Azure DevOps, OpenShift
+observability: Grafana, Loki, Prometheus, Kibana, centralized logging, metrics, monitoring
+ai: Semantic Kernel, Microsoft.Extensions.AI, Claude API, OpenAI API, multi-agent orchestration, RAG, embeddings, pgvector, Qdrant, Neo4j, ML.NET, Python, FastAPI, MLflow, XGBoost
+
+## Work experience (newest first)
+- Principal Consultant, Development at Systems Limited, Jan 2026 to Present.
+  - Principal consultant in development, full-time and hybrid.
+- Technical Team Lead at Ministry of Tourism, Saudi Arabia, Nov 2025 to Present.
+  - Leading the design, development and delivery of two enterprise microservices: Compliance and Tourism Capability Development (TCD).
+  - Architecting on ABP Framework, .NET, Angular and microservices, and leading both the backend services and the Angular micro-frontends.
+  - Leading the data migration for the TCD platform, keeping the data intact through the transition.
+  - Running sprint planning, backlog grooming, sprint reviews and daily scrums, with product owners, QA, DevOps and business teams.
+  - Reviewing code, mentoring developers, enforcing coding standards and coordinating releases across teams.
+- Senior Architect at Aroma Retail, Mar 2025 to Present.
+  - Architect engineer for Aroma Retail's IoT and cloud platform for retail devices: AWS IoT Core and MQTT, ASP.NET Core APIs, RabbitMQ, Redis, Quartz.NET and SQL Server.
+- Principal Software Engineer at Techverx, Oct 2022 to Oct 2025.
+  - Hands-on senior engineer and tech lead across enterprise projects: architecture, technical direction, code reviews, mentoring, integrations and delivery.
+  - Part of the architecture teams setting up microservices and micro-frontends: service structure, gateways, auth, shared services, databases and frontend integration.
+  - Built automated delivery and observability with Docker, GitHub Actions, Jenkins, OpenShift, Grafana, Loki, Prometheus and Kibana.
+- Development Consultant at Systems Limited, Sep 2021 to Oct 2022.
+  - With Visionet Systems Inc. on TransRe Portfolio Builder, a line-of-business solution for the reinsurance industry in the USA.
+  - Research and analysis documentation, design and development, unit and performance testing, and code reviews.
+  - Implemented Azure Service Bus for communication between applications, and Azure SharePoint document storage, with Angular and .NET Core.
+  - Full-stack work with ASP.NET Core, Angular, CQRS, MediatR and SQL Server, plus Azure SignalR and Azure DevOps.
+- Senior Software Engineer at Techverx, Mar 2018 to Sep 2021.
+  - Joined as a Software Engineer (.NET Core, Angular 6) on a SaaS application built with ASP.NET Core, Angular 5, Entity Framework and Boilerplate.
+  - Financial, retail, automotive service-management and water-treatment systems.
+  - Angular, ASP.NET Core, EF Core, SQL Server and PostgreSQL, RabbitMQ, SignalR, Docker, AWS and Azure.
+- Associate Software Engineer at Solvefy, Aug 2016 to Mar 2018.
+  - SaaS web apps for hotel management and aviation asset management, on ASP.NET MVC, ASP.NET Zero and Angular.
+  - ASP.NET Boilerplate, C#, AngularJS, ASP.NET MVC, Entity Framework, HTML5, CSS3, Bootstrap 3, JavaScript and jQuery.
+
+## Projects (11, shown on the monitor in the room)
+- AgentOS (AI project): Enterprise multi-agent orchestration: AI agents running long-running business workflows.
+  What it does:
+  - Multiple AI agents execute long-running business workflows, with dynamic planning and task decomposition.
+  - Agent registry and lifecycle, a tool registry with sandboxed tool execution, long-term memory with vector retrieval, and RAG knowledge management.
+  - LLM provider abstraction with multi-model routing across Claude and OpenAI, human-in-the-loop approvals, and durable execution with recovery.
+  - Multi-tenant identity and isolation, execution tracing, cost tracking and audit logs, agent evaluation and regression tests, a visual workflow designer and an admin portal with usage analytics.
+  How it's built:
+  - .NET 10 and ASP.NET Core with Semantic Kernel and Microsoft.Extensions.AI; Python and FastAPI for ML services.
+  - RabbitMQ with MassTransit: idempotent consumers, transactional outbox, retries and circuit breakers. PostgreSQL with pgvector, Redis and S3-compatible storage.
+  - Security: scoped credentials, prompt-injection defenses, tenant data isolation and approval policies for privileged operations. OpenIddict for identity.
+  - OpenTelemetry tracing with Grafana and Prometheus; Docker Compose, GitHub Actions, Kubernetes and Argo CD.
+  Stack: .NET 10, ASP.NET Core, EF Core, Semantic Kernel, Microsoft.Extensions.AI, Claude API, OpenAI API, Python, FastAPI, RabbitMQ, MassTransit, PostgreSQL, pgvector, Redis, OpenIddict, OpenTelemetry, Grafana, Prometheus, Angular, Docker Compose, GitHub Actions, Kubernetes, Argo CD, AWS, Azure.
+- DataForge AI (AI project): AI-powered data onboarding and migration from Excel, CSV, JSON and databases.
+  What it does:
+  - Onboards data from Excel, CSV, JSON and database sources.
+  - Automatic schema matching and semantic field mapping with embeddings.
+  - Duplicate detection, entity resolution, anomaly detection, image classification and validation.
+  - Human review of the results, and processing for millions of records.
+  Stack: .NET, Python, ML.NET, Embeddings, MassTransit, SQL Server, Angular.
+- PredictiveOps AI (AI project): IoT predictive maintenance that learns device behaviour and predicts equipment failures.
+  What it does:
+  - Streams device telemetry over MQTT and AWS IoT.
+  - Time-series forecasting, anomaly detection, device health scoring and failure prediction.
+  - Model drift monitoring with MLflow, and automated incident investigation.
+  Stack: ASP.NET Core, AWS IoT, MQTT, Python, MLflow, Kafka, TimescaleDB.
+- CodePilot Enterprise (AI project): Multi-agent software engineering: from a story to a tested pull request.
+  What it does:
+  - Reads stories from Azure DevOps and GitHub and understands the existing repository.
+  - Generates an implementation plan, edits code in isolated Docker sandboxes, runs the tests and opens a pull request.
+  - Architecture-aware code review, security scanning, dependency graphs and evaluation suites.
+  - Approval is mandatory before anything merges.
+  Stack: Claude API, OpenAI API, .NET, Docker, GitHub API, Azure DevOps.
+- We Eat (Team Lead · Architect): Online ordering and an offline-ready POS for restaurants in Pakistan, with zero commission.
+  What it is:
+  - A restaurant's own ordering website and link (yourname.weeat.store), and its own customer app for Android and iPhone.
+  - A POS for Android tablets, iPads and Windows PCs that keeps selling offline and syncs when the internet is back.
+  - AI menu import: give it a photo of the menu card and it loads the dishes and prices.
+  - An Android counter app that rings for every order, kitchen tickets on any receipt printer, a kitchen screen, waiter phones and QR ordering at the table.
+  - Delivery with SMS location links for customers and riders, live rider tracking and orders that go to the least busy rider.
+  - Loyalty (stamps, points and store credit), flyers with one-time QR codes, stock and food cost, FBR and PRA tax invoices, several branches, and an open API with webhooks.
+  How it's built:
+  - .NET microservices on ABP.io with domain-driven design (DDD), behind Nginx and an Ocelot API gateway, with SSO, talking over RabbitMQ, on Kubernetes.
+  - Next.js micro-frontends, an Electron desktop app, and SignalR for real-time updates.
+  My role:
+  - Team lead and architect.
+  Stack: .NET, ABP.io, DDD, Microservices, Ocelot, Nginx, SSO, Micro-frontends, Next.js, Electron, RabbitMQ, SignalR, Kubernetes.
+  Link: https://dev.weeat.store
+- Ministry of Tourism, Saudi Arabia (Technical Team Lead): Two enterprise microservices, Compliance and Tourism Capability Development, for a national platform.
+  What I do:
+  - Lead the design, development and delivery of two enterprise microservices: Compliance and Tourism Capability Development (TCD).
+  - Architect on ABP Framework, .NET and microservices, and lead both the backend services and the Angular micro-frontends.
+  - Integrated the API Gateway and SSO through OpenIddict, on SQL Server.
+  - Lead the data migration for the TCD platform, and carry the services through deployment, security, observability and production readiness.
+  Stack: .NET, C#, ABP Framework, Angular micro-frontends, API Gateway, OpenIddict, SQL Server, EF Core, RabbitMQ, Docker, Azure DevOps.
+- Aroma Retail (Senior Architect): An IoT and cloud platform for retail devices.
+  What I did:
+  - Built and supported the APIs for device communication and scheduling.
+  - Connected devices through AWS IoT Core and MQTT, with RabbitMQ, Redis and Quartz.NET behind them.
+  - Worked on CI/CD, cloud infrastructure, deployments and production troubleshooting on AWS.
+  Stack: ASP.NET Core, SQL Server, AWS IoT Core, MQTT, RabbitMQ, Redis, Quartz.NET, Docker.
+- Friday POS (Client work · Lead): A SaaS restaurant platform on a microservices backend I designed.
+  What I did:
+  - Led development and designed the microservices backend architecture.
+  - Services on ABP.io, EF Core and gRPC, talking over RabbitMQ, with OpenIddict for identity.
+  - Ocelot API Gateway in front; MongoDB and SQL Server behind.
+  - Led the critical features, CI/CD with Docker and Jenkins, code quality and mentoring.
+  Stack: ABP.io, .NET, EF Core, gRPC, RabbitMQ, OpenIddict, MongoDB, SQL Server, Ocelot, Docker, Jenkins.
+- TransRe Portfolio Builder (Client work): A reinsurance platform with real-time portfolio data.
+  What I did:
+  - Full-stack work on ASP.NET Core and Angular, structured with CQRS and MediatR.
+  - Integrated Azure Service Bus and Azure SignalR, with real-time data in AG Grid.
+  - Led the Angular upgrades and delivered APIs and key business features.
+  - Implemented Azure SharePoint document storage, with unit and performance testing and code reviews.
+  Stack: ASP.NET Core, Angular, CQRS, MediatR, EF Core, Dapper, SQL Server, Azure Service Bus, Azure SignalR, Azure SharePoint.
+- Advantage Control (Client work): Water treatment applications, brought forward from legacy code.
+  What I did:
+  - Developed and maintained the Angular and ASP.NET Core applications.
+  - Supported legacy modernization and RabbitMQ integration on SQL Server.
+  - Shipped with Docker and Nginx, and mentored junior developers on code quality.
+  Stack: Angular, ASP.NET Core, RabbitMQ, SQL Server, Docker, Nginx.
+- RealTimeAnalytics (Open source · 2025): Live sensor telemetry with anomaly alerts, streamed to the browser.
+  What it does:
+  - Simulates a fleet of sensors and keeps their readings in an in-memory time-series store.
+  - Detects anomalies as readings arrive and raises alerts for them.
+  - REST endpoints serve metrics and readings; SignalR pushes each new reading to an Angular dashboard.
+  How it's built:
+  - Layered solution with separate Domain, Infrastructure and API projects.
+  - EF Core models and migrations, with seed data for sensors and alerts.
+  Stack: ASP.NET Core, EF Core, SignalR, Angular, TypeScript.
+  Repo: https://github.com/taqishah1214/RealTimeAnalytics
+
+## The room (the 3D website itself)
+The site is a 3D room. Taqi's desk has the monitor (opens Projects), the phone (opens Contact), a speaker left of the monitor that plays music, and a small Messi figure. The pinboard holds his Experience. An illustrated family portrait hangs on the right wall: Taqi, his wife, their daughter and their little son; the site says nothing more about his family. An African Grey parrot sits on a stand by the window and talks when clicked. You, the friendly robot, sit at your own desk next to Taqi's. There is also a flat (non-3D) version of the site.
