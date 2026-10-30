@@ -3110,7 +3110,7 @@ function botAnswer(q){
   if(/\b(dog|dogs|puppy|pets?)\b/.test(q) && !/\b(pet (project|projects))\b/.test(q))
     return inRoom("The site doesn't say anything about his pets. The only animal in the room is the African Grey parrot on the stand by the window: click it and it talks.");
   if(/\bwhat('?s| is| are) (on|in) (the|this|his|taqi'?s) (desk|room)\b|\bwhat can i (click|press|tap|do here)\b|\bwhat('?s| is) in (here|this room)\b|\bhow (do i|to) (navigate|use) (this|the) (site|room|page)\b/.test(q))
-    return inRoom("Taqi's desk has the monitor (Projects), the phone (Contact), a speaker left of the monitor for the music and a small Messi figure right of the monitor. The pinboard holds his Experience, the African Grey parrot sits by the window, and I'm at my own desk next to his.");
+    return inRoom("Taqi's desk has the monitor (Projects), the phone (Contact), a speaker left of the monitor for the music and a small Messi figure right of the monitor. The pinboard holds his Experience, a family portrait hangs on the right wall, the African Grey parrot sits by the window, and I'm at my own desk next to his.");
   if(/\b(the|that|this) phone\b(?! (number|no|num))/.test(q) && !/\b(his|taqi'?s) phone\b/.test(q))
     return inRoom("The phone on the desk opens his Contact details: click it for his email and LinkedIn.", "On this page that's the Contact section.");
   const SITE=/\b(this|the|your) (site|website|web site|webpage|web page|page|portfolio|3d room|room)\b/;
@@ -3125,7 +3125,10 @@ function botAnswer(q){
     return `The site doesn't give team sizes. He is ${roleOf(lead)} at ${orgOf(lead.org)} (${/\b(present|now)\b/i.test(lead.when)?`since ${since(lead)}`:lead.when})${titles&&!/\blead\b/i.test(lead.role)?`, and his titles include ${titles}`:""}.`;
   if(/\b(has|have|did|does|do) (he|taqi) (ever )?(hire[ds]?|recruit(ed|s)?|interview(ed|s)?|onboard(ed|s)?)\b/.test(q))
     return `The site doesn't say whether he hires or interviews engineers.${mentors?` It does say he reviews code and mentors ${mentorJob?`developers as ${roleOf(mentorJob)} at ${orgOf(mentorJob.org)}`:"the engineers around him"}.`:""}`;
-  // the room itself: the parrot, the robot's desk, the music
+  // the room itself: the family portrait, the parrot, the robot's desk, the music
+  if(/\b(family|married|marri\w*|wife|spouse|husband|kids?|children|child|daughters?|sons?|baby|father|dad|parent)\b/.test(q) && /\b(he|his|taqi|does|is|have|has)\b/.test(q) && !/\b(experience|skills?|projects?|stack|framework|product)\b/.test(q)
+     || /\b(picture|painting|portrait|poster|art|artwork|frame|framed|print)\b/.test(q) && /\b(wall|right|family|that|this|the)\b/.test(q) && !/\b(blueprint|topology|monitor|board|pinboard)\b/.test(q))
+    return inRoom((/^(is|does|has|have) (he|taqi)\b/.test(q) && /\b(married|wife|spouse|kids?|children|child|daughters?|sons?|family)\b/.test(q) ? "Yes. " : "")+"The framed picture on the right wall, under the little brass light, is an illustrated family portrait: Taqi, his wife, their daughter and their little son. The site doesn't say more about his family.");
   if(/\b(parrot|african grey|bird)\b/.test(q) && !/\b(experience|skills?|projects?|worked?)\b/.test(q))
     return inRoom("That's the African Grey on the stand by the window. Click it and it talks. It's part of the room, so the site says nothing more about it.");
   if((/\b(music|songs?|soundtrack|lo ?fi)\b/.test(q) && /\b(this|the|that|playing|background|turn|stop|mute|off)\b/.test(q) || /\b(spotify|playlist)\b/.test(q)) && !/\b(experience|skills?|projects?|apps?|api|integrat\w*)\b/.test(q))
@@ -9278,7 +9281,7 @@ ROOM_PARTS.push({ name:"board", order:30, build(R){
                a trailing pothos, a framed photo, a ceramic robot figurine, a basket and a vase of branches
      monstera  split-leaf monstera on a moss pole in a terracotta pot (back-right corner)
      neon      "</>" LED neon on a clear acrylic panel above the couch, glow on the wall, a rare flicker
-     art       framed blueprint print above the monitor, abstract print with a picture light right of the pinboard
+     art       framed blueprint print above the monitor, family portrait (an illustration) with a picture light right of the pinboard
    Static pieces that share a material are baked into one mesh; small leaves are instanced.
    Lights added here (none casts shadows): floor lamp, neon, shelf lamp.
    ===================================================================== */
@@ -9923,7 +9926,7 @@ ROOM_PARTS.push({ name:"decor", order:50, build(R){
       neonCore.color.copy(coreC).multiplyScalar(k); neonHalo.opacity=.32*k; neonHalo2.opacity=.1*k; neonL.intensity=NEON_I*k; ng.material.opacity=k;
     }); }
   /* =====================================================================
-     WALL ART: blueprint print above the monitor, abstract print with a picture light
+     WALL ART: blueprint print above the monitor, family portrait with a picture light
      ===================================================================== */
   const frameM = new THREE.MeshStandardMaterial({ color:0xffffff, vertexColors:true, roughness:.42, envMapIntensity:.7 });
   const frameParts=[];
@@ -9975,23 +9978,70 @@ ROOM_PARTS.push({ name:"decor", order:50, build(R){
   later.push(blueprint);
   frame(BP.x,BP.y,BP.W,BP.H,0x9a6c43);
   { const p=meshOf(new THREE.PlaneGeometry(bpIW,bpIH), new THREE.MeshStandardMaterial({ map:blueprint, roughness:.36, envMapIntensity:.5 }), scene, false, false); p.position.set(BP.x,BP.y,-3.99); }
-  // 2) abstract print right of the pinboard, lit by a brass picture light
+  // 2) family portrait right of the pinboard, lit by a brass picture light: an illustration (not a photo) of Taqi, his wife,
+  //    their daughter (about 4) holding both their hands, and their little son (about 1.5) on his mother's hip
   const AP={ x:3.95, y:2.4, W:.54, H:.72 }, apIW=AP.W-.056, apIH=AP.H-.056;
   const abstract = canvasTex(1024,1024,(g,w,h)=>{
     const LW=Math.round(1024*apIW/apIH), LH=1024; g.save(); g.scale(w/LW,h/LH);
     g.fillStyle="#e4ddd1"; g.fillRect(0,0,LW,LH);
     const m=70, px=m, py=m, pw=LW-2*m, ph=LH-2*m; g.fillStyle="rgba(0,0,0,.16)"; g.fillRect(px-3,py-3,pw+6,3); g.fillRect(px-3,py-3,3,ph+6);
-    g.fillStyle="#ebe0cc"; g.fillRect(px,py,pw,ph);
     g.save(); g.beginPath(); g.rect(px,py,pw,ph); g.clip();
-    g.fillStyle="#c8643f"; g.beginPath(); g.arc(px+pw*.62,py+ph*.3,pw*.26,0,TAU); g.fill();
-    g.fillStyle="#2f4a5c"; g.fillRect(px,py+ph*.62,pw,ph*.38);
-    g.fillStyle="#d9a441"; g.beginPath(); g.arc(px+pw*.3,py+ph*.62,pw*.24,PI,0); g.fill();
-    g.fillStyle="#7d9b84"; g.beginPath(); g.moveTo(px+pw*.58,py+ph); g.lineTo(px+pw*.58,py+ph*.7); g.arc(px+pw*.76,py+ph*.7,pw*.18,PI,0); g.lineTo(px+pw*.94,py+ph); g.fill();
-    g.strokeStyle="#1d1c22"; g.lineWidth=5; g.beginPath(); g.moveTo(px+pw*.12,py+ph*.18); g.lineTo(px+pw*.4,py+ph*.18); g.stroke();
-    g.fillStyle="#1d1c22"; g.beginPath(); g.arc(px+pw*.16,py+ph*.86,10,0,TAU); g.fill();
+    // evening sky, a low sun, two hills
+    const sky=g.createLinearGradient(0,py,0,py+ph*.8); sky.addColorStop(0,"#f2e2c8"); sky.addColorStop(1,"#efb98d"); g.fillStyle=sky; g.fillRect(px,py,pw,ph);
+    g.fillStyle="#e48a5c"; g.beginPath(); g.arc(px+pw*.5,py+ph*.47,pw*.33,0,TAU); g.fill();
+    g.fillStyle="#a9b89c"; g.beginPath(); g.moveTo(px,py+ph*.74); g.quadraticCurveTo(px+pw*.3,py+ph*.62,px+pw*.62,py+ph*.72); g.quadraticCurveTo(px+pw*.85,py+ph*.78,px+pw,py+ph*.7); g.lineTo(px+pw,py+ph); g.lineTo(px,py+ph); g.fill();
+    g.fillStyle="#6f8f7a"; g.beginPath(); g.moveTo(px,py+ph*.84); g.quadraticCurveTo(px+pw*.5,py+ph*.8,px+pw,py+ph*.85); g.lineTo(px+pw,py+ph); g.lineTo(px,py+ph); g.fill();
+    g.strokeStyle="#5b4a52"; g.lineWidth=3; g.lineCap="round";
+    [[.18,.16,14],[.27,.12,10],[.78,.2,12]].forEach(([bx,by,sz])=>{ const x=px+pw*bx, y=py+ph*by; g.beginPath(); g.moveTo(x-sz,y); g.quadraticCurveTo(x-sz*.4,y-sz*.6,x,y); g.quadraticCurveTo(x+sz*.4,y-sz*.6,x+sz,y); g.stroke(); });
+    // people: flat shapes, no faces, warm brown skin
+    const SKIN="#b98463", HAIR="#231b1b";
+    const rr=(x,y,w,hh,r)=>{ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+hh,r); g.arcTo(x+w,y+hh,x,y+hh,r); g.arcTo(x,y+hh,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); g.fill(); };
+    const arm=(x0,y0,x1,y1,wd,col,hand=true)=>{ g.strokeStyle=col; g.lineWidth=wd; g.lineCap="round"; g.beginPath(); g.moveTo(x0,y0); g.lineTo(x1,y1); g.stroke(); if(hand){ g.fillStyle=SKIN; g.beginPath(); g.arc(x1,y1,wd*.62,0,TAU); g.fill(); } };
+    const head=(x,y,r)=>{ g.fillStyle=SKIN; g.beginPath(); g.arc(x,y,r,0,TAU); g.fill(); g.fillStyle="rgba(214,110,96,.35)"; g.beginPath(); g.arc(x-r*.42,y+r*.28,r*.16,0,TAU); g.arc(x+r*.42,y+r*.28,r*.16,0,TAU); g.fill(); };
+    const torso=(cx,top,bot,wt,wb,col)=>{ g.fillStyle=col; g.beginPath(); g.moveTo(cx-wt+wt*.35,top); g.lineTo(cx+wt-wt*.35,top); g.quadraticCurveTo(cx+wt,top,cx+wt,top+wt*.4); g.lineTo(cx+wb,bot); g.lineTo(cx-wb,bot); g.lineTo(cx-wt,top+wt*.4); g.quadraticCurveTo(cx-wt,top,cx-wt+wt*.35,top); g.fill(); };
+    const legs=(cx,hip,foot,gap,lw,col,shoe)=>{ g.fillStyle=col; rr(cx-gap-lw,hip,lw,foot-hip,lw*.4); rr(cx+gap,hip,lw,foot-hip,lw*.4); g.fillStyle=shoe; rr(cx-gap-lw-lw*.25,foot-lw*.55,lw*1.4,lw*.6,lw*.3); rr(cx+gap-lw*.15,foot-lw*.55,lw*1.4,lw*.6,lw*.3); };
+    const foot=py+ph*.9;
+    // dad (left)
+    const dx=px+pw*.25, dH=ph*.58, dhr=dH*.078, dhy=foot-dH+dhr, dsh=dhy+dhr+dH*.045, dhip=foot-dH*.46;
+    legs(dx,dhip-4,foot,dH*.012,dH*.075,"#2c3140","#1b1b22");
+    torso(dx,dsh,dhip+dH*.02,dH*.125,dH*.1,"#3f6079");
+    arm(dx-dH*.11,dsh+dH*.04,dx-dH*.15,dhip-dH*.02,dH*.055,"#3f6079");
+    const dHand=[dx+dH*.2,dhip+dH*.04]; arm(dx+dH*.1,dsh+dH*.04,dHand[0],dHand[1],dH*.055,"#3f6079");
+    g.fillStyle=SKIN; rr(dx-dhr*.35,dhy+dhr*.6,dhr*.7,dH*.06,4); head(dx,dhy,dhr);
+    g.fillStyle=HAIR; g.beginPath(); g.arc(dx,dhy-dhr*.05,dhr*1.06,PI*1.02,PI*1.98); g.quadraticCurveTo(dx+dhr*.3,dhy-dhr*.55,dx-dhr*.9,dhy-dhr*.2); g.fill();
+    g.beginPath(); g.moveTo(dx-dhr*.92,dhy+dhr*.1); g.quadraticCurveTo(dx-dhr*.6,dhy+dhr*1.12,dx,dhy+dhr*1.12); g.quadraticCurveTo(dx+dhr*.6,dhy+dhr*1.12,dx+dhr*.92,dhy+dhr*.1);
+    g.quadraticCurveTo(dx+dhr*.55,dhy+dhr*.82,dx,dhy+dhr*.86); g.quadraticCurveTo(dx-dhr*.55,dhy+dhr*.82,dx-dhr*.92,dhy+dhr*.1); g.fill();   // short beard along the jaw
+    // mom (right), carrying the boy on her hip
+    const mx=px+pw*.7, mH=ph*.53, mhr=mH*.08, mhy=foot-mH+mhr, msh=mhy+mhr+mH*.045;
+    g.fillStyle=HAIR; rr(mx-mhr*1.12,mhy-mhr*.6,mhr*2.24,mhr*1.6+mH*.14,mhr*.9);                       // long hair, behind
+    g.fillStyle="#262230"; rr(mx-mH*.06,foot-mH*.12,mH*.045,mH*.12,4); rr(mx+mH*.02,foot-mH*.12,mH*.045,mH*.12,4);
+    g.fillStyle="#1b1b22"; rr(mx-mH*.075,foot-mH*.035,mH*.07,mH*.035,6); rr(mx+mH*.015,foot-mH*.035,mH*.07,mH*.035,6);
+    torso(mx,msh,foot-mH*.1,mH*.11,mH*.17,"#b5574a");                                                  // long kameez
+    g.fillStyle="rgba(255,226,200,.35)"; g.fillRect(mx-mH*.16,foot-mH*.2,mH*.32,mH*.025);
+    const mHand=[mx-mH*.22,dHand[1]+ph*.005]; arm(mx-mH*.09,msh+mH*.05,mHand[0],mHand[1],mH*.05,"#b5574a");
+    g.fillStyle=SKIN; rr(mx-mhr*.35,mhy+mhr*.6,mhr*.7,mH*.06,4); head(mx,mhy,mhr);
+    g.fillStyle=HAIR; g.beginPath(); g.arc(mx,mhy-mhr*.05,mhr*1.08,PI*.95,PI*2.05); g.quadraticCurveTo(mx+mhr*.2,mhy-mhr*.75,mx-mhr*1.05,mhy+mhr*.1); g.fill();
+    // the boy, sitting on her arm
+    const bx=mx+mH*.13, bH=ph*.22, bhr=bH*.15, bseat=msh+mH*.3, bhy=bseat-bH*.62;
+    g.fillStyle="#3f6079"; rr(bx-bH*.2,bseat-bH*.06,bH*.42,bH*.14,bH*.07); rr(bx+bH*.12,bseat-bH*.04,bH*.12,bH*.3,bH*.06);   // shorts and a dangling leg
+    g.fillStyle="#e2b04a"; rr(bx-bH*.16,bhy+bhr*.9,bH*.32,bH*.36,bH*.1);                                // t-shirt
+    arm(bx-bH*.12,bhy+bhr*1.4,bx-bH*.3,bhy+bhr*2.2,bH*.08,"#e2b04a");                                 // hugging mum
+    head(bx,bhy,bhr); g.fillStyle=HAIR; g.beginPath(); g.arc(bx,bhy-bhr*.1,bhr*1.02,PI*1.05,PI*1.95); g.fill(); g.beginPath(); g.arc(bx+bhr*.15,bhy-bhr*.95,bhr*.28,0,TAU); g.fill();
+    arm(mx+mH*.1,msh+mH*.05,bx-bH*.02,bseat+bH*.02,mH*.05,"#b5574a");                                 // her arm under him
+    // the girl, between them, holding both hands
+    const kx=(dHand[0]+mHand[0])/2, kH=ph*.3, khr=kH*.12, khy=foot-kH+khr, ksh=khy+khr+kH*.04;
+    legs(kx,foot-kH*.3,foot,kH*.02,kH*.075,SKIN,"#c0463f");
+    torso(kx,ksh,foot-kH*.26,kH*.12,kH*.22,"#e9c34f");                                                 // dress
+    arm(kx-kH*.1,ksh+kH*.06,dHand[0]+kH*.03,dHand[1]+kH*.02,kH*.07,"#e9c34f",false);
+    arm(kx+kH*.1,ksh+kH*.06,mHand[0]-kH*.03,mHand[1]+kH*.02,kH*.07,"#e9c34f",false);
+    head(kx,khy,khr);
+    g.fillStyle=HAIR; g.beginPath(); g.arc(kx,khy-khr*.05,khr*1.06,PI*1.0,PI*2.0); g.fill();
+    g.beginPath(); g.arc(kx-khr*1.15,khy+khr*.1,khr*.42,0,TAU); g.arc(kx+khr*1.15,khy+khr*.1,khr*.42,0,TAU); g.fill();   // pigtails
+    g.fillStyle="#c0463f"; g.beginPath(); g.arc(kx-khr*.95,khy-khr*.25,khr*.16,0,TAU); g.arc(kx+khr*.95,khy-khr*.25,khr*.16,0,TAU); g.fill();
+    // paper grain
     const r=seeded(9); for(let i=0;i<2600;i++){ g.fillStyle=`rgba(${r()<.5?"0,0,0":"255,255,255"},${r()*.05})`; g.fillRect(px+r()*pw,py+r()*ph,1+r()*2,1+r()*2); }
     g.restore();
-    g.fillStyle="#3a3840"; g.font="600 20px 'Space Grotesk', sans-serif"; g.textAlign="left"; g.textBaseline="middle"; g.fillText("FORM / 03",px,py+ph+34);
+    g.fillStyle="#3a3840"; g.font="600 20px 'Space Grotesk', sans-serif"; g.textAlign="left"; g.textBaseline="middle"; g.fillText("FAMILY",px,py+ph+34);
     const lit=g.createRadialGradient(LW/2,-LH*.15,LW*.1,LW/2,-LH*.15,LH*1.05); lit.addColorStop(0,"rgba(255,214,160,.22)"); lit.addColorStop(.6,"rgba(255,214,160,0)"); lit.addColorStop(1,"rgba(0,0,0,.18)"); g.fillStyle=lit; g.fillRect(0,0,LW,LH);
     g.restore();
   });
