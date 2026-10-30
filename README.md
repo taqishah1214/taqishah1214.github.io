@@ -29,9 +29,10 @@ Everything personal is in the block marked `EDIT ME` at the top of the main `<sc
 - `EXPERIENCE`: the ID badges on the pinboard, newest first.
 
 The chat bot reads the same block, so adding a skill or a project there is enough for it to answer about it. It never claims anything that isn't listed.
+`aiChat` (empty for now) is the address of the AI chat in `chat-worker/` of the site repo. When it is set, questions the bot's rules can't answer go to Claude, which answers only from `facts.txt`; any failure keeps the rule answer. Setup steps are in `chat-worker/README.md`. After changing this block, rebuild `facts.txt` too (`node out/bot/facts.js > facts.txt`) and publish it next to `index.html`.
 `ph("...")` renders a highlighted placeholder if you want to mark something as unfinished.
 Your phone number is left off the site on purpose; set `phone` in `ME` to show it on the phone card.
 
 ## Deploy
 
-Any static host works. Easiest is GitHub Pages: push `index.html` (and `resume.pdf`, if you turn the links back on) to a repo named `taqishah1214.github.io` and turn on Pages in the repo settings. Vercel or Netlify also work by dragging the folder in.
+Any static host works. Easiest is GitHub Pages: push `index.html` and `facts.txt` (and `resume.pdf`, if you turn the links back on) to a repo named `taqishah1214.github.io` and turn on Pages in the repo settings. Vercel or Netlify also work by dragging the folder in.
