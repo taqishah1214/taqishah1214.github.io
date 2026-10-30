@@ -10068,12 +10068,18 @@ ROOM_PARTS.push({ name:"decor", order:50, build(R){
     g.fillStyle=SKIN; rr(mx-mhr*.35,mhy+mhr*.6,mhr*.7,mH*.06,4); head(mx,mhy,mhr);
     g.fillStyle=HAIR; g.beginPath(); g.arc(mx,mhy-mhr*.05,mhr*1.08,PI*.95,PI*2.05); g.quadraticCurveTo(mx+mhr*.2,mhy-mhr*.75,mx-mhr*1.05,mhy+mhr*.1); g.fill();
     // the boy, sitting on her arm
-    const bx=mx+mH*.13, bH=ph*.22, bhr=bH*.15, bseat=msh+mH*.3, bhy=bseat-bH*.62;
-    g.fillStyle="#3f6079"; rr(bx-bH*.2,bseat-bH*.06,bH*.42,bH*.14,bH*.07); rr(bx+bH*.12,bseat-bH*.04,bH*.12,bH*.3,bH*.06);   // shorts and a dangling leg
-    g.fillStyle="#e2b04a"; rr(bx-bH*.16,bhy+bhr*.9,bH*.32,bH*.36,bH*.1);                                // t-shirt
-    arm(bx-bH*.12,bhy+bhr*1.4,bx-bH*.3,bhy+bhr*2.2,bH*.08,"#e2b04a");                                 // hugging mum
-    head(bx,bhy,bhr); g.fillStyle=HAIR; g.beginPath(); g.arc(bx,bhy-bhr*.1,bhr*1.02,PI*1.05,PI*1.95); g.fill(); g.beginPath(); g.arc(bx+bhr*.15,bhy-bhr*.95,bhr*.28,0,TAU); g.fill();
-    arm(mx+mH*.1,msh+mH*.05,bx-bH*.02,bseat+bH*.02,mH*.05,"#b5574a");                                 // her arm under him
+    const bx=mx+mH*.11, bH=ph*.3, bhr=bH*.15, bseat=msh+mH*.4, bhy=bseat-bH*.6;
+    arm(mx+mH*.1,msh+mH*.05,bx+bH*.1,bseat+bH*.05,mH*.05,"#b5574a",false); g.fillStyle=SKIN; g.beginPath(); g.arc(bx-bH*.08,bseat+bH*.06,mH*.03,0,TAU); g.fill();   // her arm under him (drawn first: he sits on it)
+    g.save(); g.shadowColor="rgba(255,238,214,.85)"; g.shadowBlur=10;                                   // a soft light edge, so he stands out against her dress
+    g.fillStyle="#26304a"; rr(bx-bH*.19,bseat-bH*.07,bH*.4,bH*.15,bH*.07);                               // shorts
+    g.fillStyle=SKIN; rr(bx-bH*.14,bseat+bH*.04,bH*.1,bH*.22,bH*.05); rr(bx+bH*.06,bseat+bH*.04,bH*.1,bH*.24,bH*.05);   // dangling legs
+    g.fillStyle="#f4f1ea"; rr(bx-bH*.17,bseat+bH*.24,bH*.15,bH*.07,bH*.035); rr(bx+bH*.04,bseat+bH*.26,bH*.15,bH*.07,bH*.035);   // little shoes
+    g.fillStyle="#7cc4e8"; rr(bx-bH*.17,bhy+bhr*.85,bH*.34,bH*.38,bH*.1);                                // t-shirt
+    g.restore();
+    arm(bx-bH*.13,bhy+bhr*1.4,bx-bH*.32,bhy+bhr*2.4,bH*.08,"#7cc4e8");                                // hugging mum
+    arm(bx+bH*.14,bhy+bhr*1.4,bx+bH*.28,bhy+bhr*2.1,bH*.08,"#7cc4e8");                                // waving
+    g.save(); g.shadowColor="rgba(255,238,214,.85)"; g.shadowBlur=10; head(bx,bhy,bhr); g.restore(); head(bx,bhy,bhr);
+    g.fillStyle=HAIR; g.beginPath(); g.arc(bx,bhy-bhr*.1,bhr*1.02,PI*1.05,PI*1.95); g.fill(); g.beginPath(); g.arc(bx+bhr*.15,bhy-bhr*.95,bhr*.28,0,TAU); g.fill();
     // the girl, between them, holding both hands
     const kx=(dHand[0]+mHand[0])/2, kH=ph*.3, khr=kH*.12, khy=foot-kH+khr, ksh=khy+khr+kH*.04;
     legs(kx,foot-kH*.3,foot,kH*.02,kH*.075,SKIN,"#c0463f");
@@ -12416,11 +12422,21 @@ ROOM_PARTS.push({ name:"parrot", order:60, build(R){
   const ptr={x:0,y:0,t:-1e9};
   addEventListener("pointermove",e=>{ if(e.target!==R.canvas) return; ptr.x=e.clientX/innerWidth*2-1; ptr.y=-(e.clientY/innerHeight)*2+1; ptr.t=performance.now(); },{passive:true});
 
+  const SS=window.speechSynthesis, SAY={ "dotnet build!":"dot net build!" };
+  let voice=null;
+  const pickVoice=()=>{ try{ const vs=SS.getVoices(); voice=vs.find(v=>/^en(-|_)(US|GB)/i.test(v.lang) && /female|samantha|zira|google us english|aria|jenny/i.test(v.name)) || vs.find(v=>/^en/i.test(v.lang)) || null; }catch(e){} };
+  if(SS){ pickVoice(); try{ SS.addEventListener("voiceschanged",pickVoice); }catch(e){} }
+  function speak(line){
+    if(!SS || typeof SpeechSynthesisUtterance==="undefined") return false;
+    try{ SS.cancel(); const u=new SpeechSynthesisUtterance(SAY[line]||line); if(voice) u.voice=voice; u.lang=voice?voice.lang:"en-US"; u.pitch=2; u.rate=1.12; u.volume=.9; SS.speak(u); return true; }catch(e){ return false; }
+  }
   const REACTS=["flap","spread","bob"]; let reactN=0;
   function react(){
     const line=nextLine();
     say(line);
-    if(typeof roomSfx==="function") roomSfx("parrot",{line});
+    // the words out loud, in a high, quick voice (the browser's own speech, started by the click); the whistle
+    // stays a sound effect
+    if(/whee|wheo/i.test(line) || !speak(line)){ if(typeof roomSfx==="function") roomSfx("parrot",{line}); }
     talk0=pk; talkDur=360+line.length*75; hideAt=pk+Math.max(2600,talkDur+1700);
     lookMode="cam"; nextLook=pk+2600;
     const kind=REACTS[reactN++%REACTS.length];
