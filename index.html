@@ -3072,6 +3072,7 @@ function botAnswer(q){
   const contact = `Email ${ME.email}${ME.linkedin?`, or find him on LinkedIn: ${ME.linkedin}`:""}.`;
   const direct = `so ask him directly: ${ME.email}.`;
   if(/^(hi|hey|hello|hiya|yo|salam|assalam|aoa|good (morning|afternoon|evening))\b/.test(q) && q.split(/\s+/).length<=4) return "Hello! Ask me about Taqi's experience, what he has built, his stack, or how to reach him.";
+  { const st=smallTalk(q,raw); if(st) return st; }
   if(/^(thanks|thank you|thx|ty|cheers|great|nice|cool|awesome)\b/.test(q)) return "You're welcome. Anything else you'd like to know about Taqi?";
   if(/^(bye|goodbye|see you|see ya)\b/.test(q)) return "Bye for now. The phone on the desk has his contact details if you want to talk to the real Taqi.";
   // instructions instead of questions: no role-play, no lines repeated on request, no scores
@@ -3294,7 +3295,7 @@ function botAnswer(q){
 
   if(/\bwhats ?app\b|\bphone (number|no)\b|\bmobile\b|\bcell\b|\btelephone\b|\bnumber\b/.test(q)) return ME.phone ? `His number is ${ME.phone}. ${contact}` : `The site doesn't list a phone number or WhatsApp. ${contact}`;
   if(/contact|email|reach|linkedin|message|talk|phone|call|get in touch/.test(q)) return `${contact} The phone on the desk has everything.`;
-  if(/github|open.?source|repo/.test(q)) return `His GitHub is github.com/${ME.github}. RealTimeAnalytics is the open-source project on the monitor, and the terminal there lists more repos.`;
+  if(/github|open.?source|repo/.test(q)) return `His GitHub is github.com/${ME.github}. RealTimeAnalytics is the open-source project on the monitor.`;
   if(/\b(where|location|located|city|country|from|live|lives|living|based)\b/.test(q)) return `He's based in ${ME.location}.`;
   // "who is Elon Musk": someone the site doesn't mention is not a cue to describe Taqi
   const wm=raw.match(/^who(?:'s| is| are| was| were)\s+(.+?)[?.!\s]*$/i);
@@ -8921,6 +8922,51 @@ function bkWhenOf(s, a){
   } else if (S.length && /^The site doesn't put a number of years on /.test(S[0])) S[0] = "The site doesn't say when he used " + a.label + ".";
   return S.join(" ");
 }
+
+/* ---------- small talk: maths, the date and time, how I am, jokes, compliments ----------
+   Asked only after the greetings and before anything about Taqi; every pattern is anchored, so a question about his
+   work never lands here. Returns null when it isn't small talk. */
+var stJoke=0;
+var ST_JOKES=[
+  "Why do .NET developers wear glasses? Because they can't C#.",
+  "There are 10 kinds of people: those who understand binary and those who don't.",
+  "A SQL query walks into a bar, goes up to two tables and asks: can I join you?",
+  "Why did the microservice break up with the monolith? It needed some space. And its own database.",
+  "I'd tell you a UDP joke, but you might not get it.",
+];
+function stCalc(src){
+  // + - * / % ^ and brackets, nothing else; returns a number or null
+  const t=src.replace(/[x×]/g,"*").replace(/÷/g,"/").replace(/\s+/g,"").replace(/,(?=\d{3}\b)/g,"");
+  if(!/^[\d.+\-*/%^()]+$/.test(t) || !/\d/.test(t) || !/[+\-*/%^]/.test(t.replace(/^-/,""))) return null;
+  let i=0;
+  const num=()=>{ const m=t.slice(i).match(/^\d*\.?\d+/); if(!m) throw 0; i+=m[0].length; return parseFloat(m[0]); };
+  const atom=()=>{ if(t[i]==="-"){ i++; return -atom(); } if(t[i]==="("){ i++; const v=expr(); if(t[i++]!==")") throw 0; return v; } return num(); };
+  const pow=()=>{ const b=atom(); if(t[i]==="^"){ i++; return Math.pow(b,pow()); } return b; };
+  const term=()=>{ let v=pow(); while("*/%".includes(t[i]||"#")){ const o=t[i++], r=pow(); v= o==="*"?v*r : o==="/"?v/r : v%r; } return v; };
+  const expr=()=>{ let v=term(); while("+-".includes(t[i]||"#")){ const o=t[i++], r=term(); v= o==="+"?v+r : v-r; } return v; };
+  try{ const v=expr(); return i===t.length && isFinite(v) ? v : null; }catch(e){ return null; }
+}
+function smallTalk(q,raw){
+  // maths: "2+2", "2+2 = ?", "what is 12*7", "calculate (3+4)^2"
+  const mq=raw.replace(/^\s*(what('?s| is)|whats|calculate|compute|solve|how much is)\s+/i,"").replace(/\s*=?\s*\?*\s*$/,"");
+  const v=stCalc(mq);
+  if(v!==null){ const r=Math.abs(v)>=1e15||(v!==0&&Math.abs(v)<1e-6) ? v.toPrecision(6) : String(+v.toFixed(8)); return `That's ${r}. Maths I can do; for anything else, I only know about Taqi's work.`; }
+  // the date and time where the visitor is (his own local time is handled with the time zone questions)
+  if(/^(what('?s| is)? )?(the )?(time|date|day)( is it)?( now| today| right now)?$|^what (time|day|date) is it( now| today)?$|^(what('?s| is) )?today'?s date$/.test(q.replace(/[?!.]/g,"").trim())){
+    const d=new Date(), dt=d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"}), tm=d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+    let his=""; try{ if(ME.timezone) his=` For Taqi in ${ME.location} it's ${d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit",timeZone:ME.timezone})}.`; }catch(e){}
+    return `Where you are, it's ${tm} on ${dt}.${his}`;
+  }
+  if(/^(how are (you|u)|how'?s it going|how (are|r) (you|u) doing|how do you do|what'?s up|wassup|sup)\b/.test(q)) return "Running smoothly, thanks: no bugs today, and the coffee next to Taqi's keyboard is still warm. What would you like to know about his work?";
+  if(/\b(tell|know) (me )?(a |any |another )?(joke|jokes)\b|^(a )?joke\b|make me laugh|something funny/.test(q)){ const j=ST_JOKES[stJoke++%ST_JOKES.length]; return j+" Ask me another, or ask about Taqi's projects."; }
+  if(/^(what can (you|u) do|what do (you|u) (do|know)|help|what should i ask|what can i ask( you)?)\b/.test(q)) return "I can tell you about Taqi's experience and roles, the projects on the monitor and how they're built, his stack (try \"does he know Kafka?\"), and how to reach him. I can also do quick maths and tell you the time.";
+  if(/^(nice|cool|great|love|loved|awesome|amazing|beautiful|wow)\b.*\b(site|website|room|portfolio|design|robot|bot|work|page)\b|^(this|the) (site|website|room|portfolio) (is|looks) /.test(q)) return "Thank you! Taqi will be glad to hear it. If you'd like to work with him, the phone on the desk has his details.";
+  if(/\bweather\b|\b(is it|will it) (rain|snow|sunny|hot|cold)\b/.test(q)) return "I can't see outside my screen, so no weather from me. The city out of the window always looks like a mild evening, though.";
+  if(/^(you('?re| are)|u r|ur) (stupid|dumb|useless|bad|boring|slow|an idiot)\b|^(stupid|dumb|useless) (bot|robot)\b/.test(q)) return "Fair. I'm a small robot that only knows what's on this site. Try me on Taqi's experience, projects or stack, and I'll do better.";
+  if(/^(i love (you|u)|marry me|are (you|u) single)\b/.test(q)) return "That's kind, but I'm married to this desk. Ask me something about Taqi's work instead.";
+  return null;
+}
+
 
 /* ==== room/board.js ==== */
 /* =====================================================================
