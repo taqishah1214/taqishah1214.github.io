@@ -9539,7 +9539,7 @@ ROOM_PARTS.push({ name:"board", order:30, build(R){
 /* ==== room/decor.js ==== */
 /* =====================================================================
    DECOR: the lived-in layer of the room. Everything is procedural.
-     rug       vintage wool rug under the desk and chair (painted pattern, pile normal map, fringe)
+     rug       modern low-pile rug under the desk and chair (abstract arcs, rounded corners, pile normal map)
      couch     velvet sofa on the left wall: soft rounded cushions with welts, knit throw, two pillows, walnut legs
      lamp      tripod floor lamp with a linen drum shade, warm light, its light scallops on the wall and ceiling
      shelf     walnut bookcase on the right wall: about 90 books in one draw call (spine atlas), a mushroom lamp,
@@ -9639,50 +9639,46 @@ ROOM_PARTS.push({ name:"decor", order:50, build(R){
   const brassM = mat(0xc9a35e, { metalness:1, roughness:.3, envMapIntensity:1.3 });
 
   /* =====================================================================
-     RUG: 3.0 x 2.1 m vintage wool rug under the desk and the chair
+     RUG: 3.0 x 2.1 m modern low-pile rug under the desk and the chair.
+     Warm greige wool, soft rounded corners, no fringe; an abstract pattern of
+     two overlapping arcs (charcoal and a muted lavender that echoes the UI) and
+     a thin cream line, with a quiet hand-loomed stripe in the pile.
      ===================================================================== */
-  const RUG={ x:1.3, z:-2.3, w:3.0, d:2.1 };
-  const rugSet = tex.carpet({ base:"#262c52", size:TS(1024), seed:23, pile:1.15, draw:function(g,w,h){
-    const RW=3.0, RD=2.1, sx=w/RW, sy=h/RD, rnd=seeded(4711), X=m=>m*sx, Y=m=>m*sy;
-    const col={ ink:"#1a1c33", field:"#29305a", field2:"#3a4680", rust:"#8c4431", rust2:"#a85d3e", cream:"#d6c6a4", gold:"#b88a4c", rose:"#9a5266", teal:"#3e6a6c" };
-    const rect=(x0,y0,x1,y1,c)=>{ g.fillStyle=c; g.fillRect(X(x0),Y(y0),X(x1-x0),Y(y1-y0)); };
-    const dia=(cx,cy,rx,ry,c,lw)=>{ g.beginPath(); g.moveTo(X(cx),Y(cy-ry)); g.lineTo(X(cx+rx),Y(cy)); g.lineTo(X(cx),Y(cy+ry)); g.lineTo(X(cx-rx),Y(cy)); g.closePath(); if(lw){ g.strokeStyle=c; g.lineWidth=lw*w/1024; g.stroke(); } else { g.fillStyle=c; g.fill(); } };
-    rect(0,0,RW,RD,col.ink); rect(.025,.025,RW-.025,RD-.025,col.cream); rect(.045,.045,RW-.045,RD-.045,col.rust);
-    rect(.195,.195,RW-.195,RD-.195,col.cream); rect(.21,.21,RW-.21,RD-.21,col.ink); rect(.225,.225,RW-.225,RD-.225,col.field);
-    // outer guard: little rust dots
-    for(let x=.06;x<RW-.04;x+=.05){ dia(x,.035,.008,.008,col.rust); dia(x,RD-.035,.008,.008,col.rust); }
-    for(let y=.06;y<RD-.04;y+=.05){ dia(.035,y,.008,.008,col.rust); dia(RW-.035,y,.008,.008,col.rust); }
-    // main border: running hooked diamonds
-    const motif=(cx,cy)=>{ dia(cx,cy,.055,.055,col.cream); dia(cx,cy,.038,.038,col.ink); dia(cx,cy,.02,.02,col.gold); dia(cx,cy,.007,.007,col.cream); };
-    for(let x=.2;x<RW-.12;x+=.155){ motif(x,.12); motif(x,RD-.12); dia(x+.078,.12,.012,.03,col.rust2); dia(x+.078,RD-.12,.012,.03,col.rust2); }
-    for(let y=.33;y<RD-.25;y+=.155){ motif(.12,y); motif(RW-.12,y); }
-    // field: an allover lattice of open diamonds
-    g.save(); g.beginPath(); g.rect(X(.225),Y(.225),X(RW-.45),Y(RD-.45)); g.clip();
-    for(let iy=0;iy<16;iy++) for(let ix=0;ix<22;ix++){ const cx=.225+ix*.15+(iy%2)*.075, cy=.225+iy*.13; dia(cx,cy,.06,.055,col.field2,3); dia(cx,cy,.011,.011,(ix+iy)%3?col.cream:col.rust2); }
-    // corners
-    [[.225,.225],[RW-.225,.225],[.225,RD-.225],[RW-.225,RD-.225]].forEach(([cx,cy])=>{ dia(cx,cy,.44,.32,col.ink); dia(cx,cy,.41,.3,col.rust); dia(cx,cy,.34,.25,col.cream); dia(cx,cy,.31,.225,col.field); dia(cx,cy,.19,.14,col.teal); dia(cx,cy,.08,.06,col.gold); });
-    // central medallion with pendants
-    const mx=RW/2, my=RD/2;
-    [-1,1].forEach(s=>{ dia(mx+s*.86,my,.13,.13,col.ink); dia(mx+s*.86,my,.11,.11,col.rust); dia(mx+s*.86,my,.06,.06,col.cream); dia(mx+s*.86,my,.025,.025,col.ink); });
-    dia(mx,my,.8,.54,col.ink); dia(mx,my,.76,.51,col.rust); dia(mx,my,.66,.44,col.cream); dia(mx,my,.62,.415,col.field);
-    for(let i=0;i<8;i++){ const a=i/8*TAU; dia(mx+Math.cos(a)*.38,my+Math.sin(a)*.25,.045,.045,i%2?col.gold:col.rose); }
-    dia(mx,my,.3,.2,col.teal); dia(mx,my,.24,.16,col.cream); dia(mx,my,.19,.125,col.rust); dia(mx,my,.1,.068,col.ink); dia(mx,my,.045,.03,col.gold);
+  const RUG={ x:1.3, z:-2.3, w:3.0, d:2.1, r:.14 };
+  const rugSet = tex.carpet({ base:"#8d857b", size:TS(1024), seed:23, pile:.7, draw:function(g,w,h){
+    const RW=RUG.w, RD=RUG.d, sx=w/RW, sy=h/RD, rnd=seeded(4711), X=m=>m*sx, Y=m=>m*sy;
+    const col={ field:"#8d857b", field2:"#958d82", char:"#4a4851", lav:"#7d7596", sand:"#b2a48c", line:"#d9cfbd" };
+    g.fillStyle=col.field; g.fillRect(0,0,w,h);
+    // hand-loomed stripe: faint tone-on-tone bands along the length
+    for(let y=0;y<h;){ const bh=(2+rnd()*9)*h/1024; g.fillStyle=`rgba(${rnd()<.5?"40,36,32":"236,226,210"},${.025+rnd()*.035})`; g.fillRect(0,y,w,bh); y+=bh+rnd()*3*h/1024; }
+    const arc=(cx,cy,r,c)=>{ g.beginPath(); g.ellipse(X(cx),Y(cy),X(r),Y(r),0,0,TAU); g.fillStyle=c; g.fill(); };
+    g.save(); g.beginPath(); g.rect(0,0,w,h); g.clip();
+    // the desk hides the back half, so the shapes sit toward the front edge:
+    // a charcoal arc rising from the front-left, a lavender one from the front-right, a sand disc between
+    arc(.3,RD+.2,.92,col.char);
+    arc(RW+.05,RD+.32,1.0,col.lav);
+    arc(1.55,RD-.62,.26,col.sand);
+    g.save(); g.beginPath(); g.ellipse(X(.3),Y(RD+.2),X(.92),Y(.92),0,0,TAU); g.clip(); arc(1.55,RD-.62,.26,"#6f6555"); g.restore();
+    g.save(); g.beginPath(); g.ellipse(X(RW+.05),Y(RD+.32),X(1.0),Y(1.0),0,0,TAU); g.clip(); arc(1.55,RD-.62,.26,"#a1907f"); g.restore();
+    // a single thin cream line sweeping across, like a pencil stroke
+    g.strokeStyle=col.line; g.lineWidth=X(.016); g.lineCap="round"; g.beginPath();
+    g.moveTo(X(.22),Y(.55)); g.bezierCurveTo(X(.9),Y(.35),X(1.1),Y(1.35),X(1.85),Y(1.25)); g.bezierCurveTo(X(2.4),Y(1.18),X(2.55),Y(.6),X(2.82),Y(.42)); g.stroke();
     g.restore();
-    // abrash (dye bands across the warp) and wear patches where the cream foundation shows
-    for(let x=0;x<w;){ const bw=(3+rnd()*36)*w/1024; g.fillStyle=`rgba(${rnd()<.5?"0,0,0":"255,236,210"},${rnd()*.07})`; g.fillRect(x,0,bw,h); x+=bw; }
-    for(let i=0;i<46;i++){ const cx=rnd()*w, cy=rnd()*h, r=(18+rnd()*110)*w/1024, gr=g.createRadialGradient(cx,cy,0,cx,cy,r); gr.addColorStop(0,`rgba(222,206,176,${.05+rnd()*.09})`); gr.addColorStop(1,"rgba(222,206,176,0)"); g.fillStyle=gr; g.fillRect(cx-r,cy-r,2*r,2*r); }
+    // a soft inset outline 9 cm from the edge
+    g.strokeStyle="rgba(60,56,52,.28)"; g.lineWidth=X(.008); const m=.09, rr=RUG.r-.04;
+    g.beginPath(); g.moveTo(X(m+rr),Y(m)); g.arcTo(X(RW-m),Y(m),X(RW-m),Y(RD-m),X(rr)); g.arcTo(X(RW-m),Y(RD-m),X(m),Y(RD-m),X(rr)); g.arcTo(X(m),Y(RD-m),X(m),Y(m),X(rr)); g.arcTo(X(m),Y(m),X(RW-m),Y(m),X(rr)); g.closePath(); g.stroke();
+    // gentle tonal variation so the field isn't flat
+    for(let i=0;i<30;i++){ const cx=rnd()*w, cy=rnd()*h, r=(60+rnd()*160)*w/1024, gr=g.createRadialGradient(cx,cy,0,cx,cy,r); const c=rnd()<.5?"30,26,22":"240,232,218"; gr.addColorStop(0,`rgba(${c},${.03+rnd()*.04})`); gr.addColorStop(1,`rgba(${c},0)`); g.fillStyle=gr; g.fillRect(cx-r,cy-r,2*r,2*r); }
   }});
-  const rugM = pbr(0xffffff, rugSet, { envMapIntensity:.25 }); rugM.normalScale.set(.9,.9);
-  const rugGeo = new THREE.BoxGeometry(RUG.w,.012,RUG.d);
-  { const uv=rugGeo.attributes.uv; [0,1,4,5].forEach(f=>{ for(let j=0;j<4;j++) uv.setXY(f*4+j,.004,.5); }); }
-  const rug = meshOf(rugGeo, rugM, scene, false, true); rug.position.set(RUG.x,.006,RUG.z); rug.name="rug";
-  // fringe on the two short ends
-  const fringeTex = canvasTex(64,1024,(g,w,h)=>{ g.clearRect(0,0,w,h); const r=seeded(99); g.lineCap="round";
-    for(let y=3;y<h;y+=6){ for(let k=0;k<2;k++){ const len=w*(.68+r()*.3), yy=y+k*2+(r()-.5); g.strokeStyle=`rgb(${212+r()*22|0},${198+r()*20|0},${170+r()*20|0})`; g.lineWidth=1.5; g.beginPath(); g.moveTo(0,yy); g.quadraticCurveTo(len*.5,yy+(r()-.5)*4,len,yy+(r()-.5)*7); g.stroke(); } }
-    for(let y=1;y<h;y+=12){ g.fillStyle=`rgb(${196+r()*16|0},${180+r()*14|0},${150+r()*14|0})`; g.beginPath(); g.ellipse(7,y+5,6,5,0,0,TAU); g.fill(); } });
-  const fringeM = new THREE.MeshStandardMaterial({ map:fringeTex, alphaTest:.45, side:THREE.DoubleSide, roughness:1 });
-  const fr = s=>{ const g=new THREE.PlaneGeometry(.085,RUG.d); g.rotateX(-PI/2); if(s<0) g.rotateY(PI); g.translate(RUG.x+s*(RUG.w/2+.04),.004,RUG.z); return [g,null]; };
-  meshOf(bake([fr(1),fr(-1)]), fringeM, scene, false, true);
+  const rugM = pbr(0xffffff, rugSet, { envMapIntensity:.2 }); rugM.normalScale.set(.55,.55);
+  // rounded-rectangle slab, 14 mm thick, UVs mapped flat across the top so the pattern lands exactly
+  const rugShape = new THREE.Shape(); { const hw=RUG.w/2, hd=RUG.d/2, r=RUG.r;
+    rugShape.moveTo(-hw+r,-hd); rugShape.lineTo(hw-r,-hd); rugShape.quadraticCurveTo(hw,-hd,hw,-hd+r); rugShape.lineTo(hw,hd-r); rugShape.quadraticCurveTo(hw,hd,hw-r,hd);
+    rugShape.lineTo(-hw+r,hd); rugShape.quadraticCurveTo(-hw,hd,-hw,hd-r); rugShape.lineTo(-hw,-hd+r); rugShape.quadraticCurveTo(-hw,-hd,-hw+r,-hd); }
+  const rugGeo = new THREE.ExtrudeGeometry(rugShape, { depth:.014, bevelEnabled:false, curveSegments:8 });
+  { const pos=rugGeo.attributes.position, uv=rugGeo.attributes.uv; for(let i=0;i<pos.count;i++) uv.setXY(i, pos.getX(i)/RUG.w+.5, pos.getY(i)/RUG.d+.5); }
+  rugGeo.rotateX(-PI/2);
+  const rug = meshOf(rugGeo, rugM, scene, false, true); rug.position.set(RUG.x,0,RUG.z); rug.name="rug";
   R.contactShadow(scene, RUG.w+.06, RUG.d+.06, RUG.x, 0, RUG.z, .4, {soft:.05});
   /* =====================================================================
      COUCH on the left wall. Couch space: x along the couch, +z toward the room, y up.
