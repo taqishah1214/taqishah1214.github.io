@@ -37,7 +37,10 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<!-- fonts load without blocking the first paint (phones on slow networks see the loader sooner); fallbacks swap in -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Doto:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" media="print" onload="this.media='all';window.dispatchEvent(new Event('fontcss'))" id="gfonts" href="https://fonts.googleapis.com/css2?family=Doto:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"></noscript>
 <style>
 /* ==== css/base.css ==== */
 /* Layout: a night-time 3D desk room fills the screen. Props open sections (monitor = projects, pinboard = experience,
@@ -1532,6 +1535,27 @@ body.docked .music{top:calc(var(--safe-t) + 70px)}
 /* phones: below the name, clock and flat-version link, over the ceiling */
 @media (max-width:760px){ .spotify{top:calc(var(--safe-t) + 124px);right:max(16px,env(safe-area-inset-right,0px));width:min(320px,calc(100vw - 48px))} }
 
+/* =====================================================================
+   The Sky button (room/ambience.js): left of the Music button. Its icon is the sky now showing (sun, sunset, moon);
+   a click cycles auto (the visitor's clock), day, evening, night. --music-w is the Music button's width, set by script.
+   ===================================================================== */
+.skybtn{position:fixed;z-index:44;right:calc(max(18px,env(safe-area-inset-right,0px)) + var(--music-w,98px) + 8px);top:calc(var(--safe-t) + 18px);display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 13px 0 11px;
+  border-radius:999px;border:1px solid var(--stroke-2);background:rgba(28,30,58,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 24px rgba(0,0,0,.28);color:var(--muted);font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+  transition:top .45s var(--ease-out),opacity .3s,visibility 0s,color .2s,border-color .2s}
+.skybtn:hover{color:var(--fg);border-color:rgba(184,164,255,.5)}
+.skybtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.skybtn svg{display:none;width:16px;height:16px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.skybtn[data-phase="day"] .sun,.skybtn[data-phase="evening"] .dusk,.skybtn[data-phase="night"] .moon{display:block}
+.skybtn[data-phase="day"] svg{stroke:#ffd27a}
+#loader:not(.gone) ~ .skybtn,html.flat .skybtn{opacity:0;visibility:hidden;pointer-events:none}
+body.docked .skybtn{top:calc(var(--safe-t) + 70px)}
+@media (max-width:760px){
+  .skybtn{width:40px;height:40px;padding:0;justify-content:center;right:calc(max(18px,env(safe-area-inset-right,0px)) + 48px)}
+  .skybtn .st{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  body.docked .skybtn{opacity:0;visibility:hidden;pointer-events:none}
+}
+
 /* ==== css/base-end.css ==== */
 /* =====================================================================
    FLAT VERSION: a one-page portfolio (no WebGL, or the visitor chose it)
@@ -1876,6 +1900,7 @@ html.lowfx .hero.sig.in>*,html.lowfx .hero.sig.in h1 .c,html.lowfx .pg-now.swap 
   <button type="button" class="pg next" id="pgnext" aria-label="Next section"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
 </nav>
 
+<button class="skybtn" id="skybtn" type="button" aria-label="Sky"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/></svg><svg class="dusk" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16a5 5 0 0 1 10 0"/><path d="M2.5 16h19M5 20h14M12 5.5v2.6M4.8 9.2l1.8 1.5M19.2 9.2l-1.8 1.5"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z"/></svg><span class="st">Auto</span></button>
 <button class="music" id="music" type="button" aria-pressed="true"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mt">Music</span></button>
 
 <main id="main">
@@ -1894,12 +1919,7 @@ html.lowfx .hero.sig.in>*,html.lowfx .hero.sig.in h1 .c,html.lowfx .pg-now.swap 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/RoundedBoxGeometry.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script>(function(){var m=Math.min(innerWidth,innerHeight)<620||(matchMedia("(pointer: coarse)").matches&&Math.max(innerWidth,innerHeight)<1100);if(m)return;["shaders/CopyShader.js","shaders/LuminosityHighPassShader.js","postprocessing/EffectComposer.js","postprocessing/RenderPass.js","postprocessing/ShaderPass.js","postprocessing/UnrealBloomPass.js"].forEach(function(s){document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/'+s+'"><\/script>')});})();</script>
 <script>
 /* ==== js/data.js ==== */
 /* =====================================================================
@@ -2203,6 +2223,18 @@ document.addEventListener("click", e => {
     || (/github\.com/.test(href) ? "github" : "");
   if(name) track(name);
 }, true);
+
+/* FONTS_READY: resolves once the web fonts are really in. The Google Fonts stylesheet loads without blocking the
+   first paint (shell.html), so document.fonts.ready alone can resolve before it arrives: wait for the stylesheet,
+   then ask for each face that canvas textures and measured layouts use. Gives up waiting after 5 s. */
+const FONTS_READY = (()=>{
+  if(!document.fonts) return Promise.resolve();
+  const l=document.getElementById("gfonts");
+  const css = !l || l.media==="all" ? Promise.resolve() : new Promise(r=>{ addEventListener("fontcss",r,{once:true}); l.addEventListener("error",r,{once:true}); });
+  const faces = ["700 16px Doto","900 16px Doto","400 16px 'Space Grotesk'","500 16px 'Space Grotesk'","600 16px 'Space Grotesk'","700 16px 'Space Grotesk'","400 16px 'Space Mono'","700 16px 'Space Mono'"];
+  const all = css.then(()=>Promise.all(faces.map(f=>document.fonts.load(f).catch(()=>{})))).then(()=>document.fonts.ready);
+  return Promise.race([all, new Promise(r=>setTimeout(r,5000))]);
+})();
 
 /* ==== js/ui-projects.js ==== */
 /* =====================================================================
@@ -3728,7 +3760,7 @@ function buildChrome(){
   tickClocks(); setInterval(tickClocks, 15000);
   tickLive(true); setInterval(()=>tickLive(), 1000);
   addEventListener("resize",()=>{ placeHL(curKey); });
-  document.fonts && document.fonts.ready.then(()=>placeHL(curKey));
+  FONTS_READY.then(()=>placeHL(curKey));
   cursorFX();
 }
 
@@ -4071,7 +4103,7 @@ function startRoom(){
     tag, interactive,
     onFrame(fn){ frameHooks.push(fn); },
     dock:{}, anchors:{}, refs:{},
-    fontsReady: document.fonts ? document.fonts.ready : Promise.resolve(),
+    fontsReady: FONTS_READY,
     get state(){ return state; },
     get docked(){ return docked; },
     lowPower,
@@ -4594,6 +4626,7 @@ function makeTextures(canvasTex){
    and the card says so for a few seconds, with a link to the playlist. Spotify's rules apply: visitors signed in to
    Spotify in that browser hear full songs, everyone else 30-second previews; Safari doesn't let a page start the
    player, so there the visitor presses play in the card. Spotify keeps playing in a hidden tab; the flat page pauses it.
+   ROOM_AUDIO.rain(on) adds soft rain under the loop while the window shows rain (room/ambience.js).
    roomSfx(name, opts) plays a one-off sound when sound is on ("parrot": a whistle, a ring or chatter).
    ROOM_AUDIO.toggle() is what the Music button and the desk speaker (room/speaker.js) do on a click;
    ROOM_AUDIO.level() is how hard the kick drum pushes a woofer right now (0..1), for the speaker's cone (with Spotify,
@@ -4601,7 +4634,7 @@ function makeTextures(canvasTex){
    ===================================================================== */
 const ROOM_AUDIO = (()=>{
   const AC = window.AudioContext || window.webkitAudioContext;
-  let ctx=null, out=null, music=null, ep=null, drums=null, bells=null, sfx=null, noise=null, crackle=null, timer=null;
+  let rainG=null, rainOn=false, ctx=null, out=null, music=null, ep=null, drums=null, bells=null, sfx=null, noise=null, crackle=null, timer=null;
   let want=true, playing=false, nextT=0, step=0, bar=0, seed=7;
   try{ want = localStorage.getItem("ts-music")!=="off"; }catch(e){}
   const rnd = ()=>{ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; };
@@ -4638,6 +4671,10 @@ const ROOM_AUDIO = (()=>{
     crackle=ctx.createBufferSource(); crackle.buffer=vb; crackle.loop=true;
     const vHp=ctx.createBiquadFilter(); vHp.type="highpass"; vHp.frequency.value=400; const vLp=ctx.createBiquadFilter(); vLp.type="lowpass"; vLp.frequency.value=6000;
     const vg=ctx.createGain(); vg.gain.value=.5; crackle.connect(vHp); vHp.connect(vLp); vLp.connect(vg); vg.connect(music); crackle.start();
+    // rain on the window (room/ambience.js turns it on): soft filtered noise, under the music, following its fade
+    const rs=ctx.createBufferSource(); rs.buffer=noise; rs.loop=true; rs.playbackRate.value=.93;
+    const rHp=ctx.createBiquadFilter(); rHp.type="highpass"; rHp.frequency.value=380; const rLp=ctx.createBiquadFilter(); rLp.type="lowpass"; rLp.frequency.value=2400; rLp.Q.value=.3;
+    rainG=ctx.createGain(); rainG.gain.value=rainOn?.11:0; rs.connect(rHp); rHp.connect(rLp); rLp.connect(rainG); rainG.connect(out); rs.start();
     document.addEventListener("visibilitychange", sync);
     return true;
   }
@@ -4878,7 +4915,9 @@ const ROOM_AUDIO = (()=>{
       else { chatter(t, line.split(/\s+/).length+1); if(rnd()<.6) whistle(t+.55+rnd()*.3,[[0,1900],[.12,2900]],.08); }
     }
   }
-  return { start, set, toggle, level, get on(){ return want; }, get playing(){ return isPlaying(); }, get spotify(){ return SPOT ? (sp ? sp.st : "idle") : null; },
+  // rain sound on or off (fades over a second); heard only while the music is on, like the rest of the loop
+  function rain(on){ rainOn=!!on; if(rainG){ const g=rainG.gain; g.cancelScheduledValues(ctx.currentTime); g.setValueAtTime(g.value,ctx.currentTime); g.linearRampToValueAtTime(rainOn?.11:0,ctx.currentTime+1.2); } }
+  return { start, set, toggle, level, rain, get on(){ return want; }, get playing(){ return isPlaying(); }, get spotify(){ return SPOT ? (sp ? sp.st : "idle") : null; },
     sfx:sfxPlay, tap:()=>ctx && { ctx, out, sfx } };
 })();
 function roomSfx(name, opts){ try{ ROOM_AUDIO.sfx(name, opts); }catch(e){} }
@@ -9187,6 +9226,275 @@ function botFacts(){
   return L.join("\n");
 }
 
+/* ==== room/ambience.js ==== */
+/* =====================================================================
+   AMBIENCE: time of day, room lights and rain. Built last (order 95), it only changes what other parts made.
+     sky      follows the visitor's clock: day (07:00-17:30), evening (05:00-07:00 and 17:30-20:00, the room as it
+              was designed: dusk sky, moon) and night (20:00-05:00: deeper, bluer, more windows lit). Day swaps in a
+              pale blue sky, hides the moon, stars and beacons, lifts the city toward a soft haze, and turns the
+              moonlight into a warm sun patch through the window. The Sky button (top right, #skybtn) cycles
+              auto, day, evening, night. Everything eases over about a second.
+     lights   the desk lamp turns off and on when clicked; a light switch right of the window turns the ceiling light
+              on (a warm point light on larger screens; on phones, where lights are budgeted, the fill is raised instead)
+     rain     drops on the outside of the glass (some run down and wipe a trail), streaks falling in front of the
+              buildings across the street, and soft rain under the music (ROOM_AUDIO.rain). Click the window to start
+              or stop it; the choice is remembered ("ts-rain", on by default).
+   The outside is unlit (MeshBasic): its materials get a small fragment patch (uDay, uNight, uHaze) at build time,
+   so a change of phase is a few uniforms, never a shader recompile. Lights are only ever dimmed, never added or
+   removed after the first frame, for the same reason.
+   Refs: R.refs.ambience { mode, phase, setMode(m), lamp, ceiling, rain, toggleLamp(), toggleCeiling(), toggleRain() }
+   ===================================================================== */
+ROOM_PARTS.push({ name:"ambience", order:95, build(R){
+  const { THREE, scene, V, mat, rbox, canvasTex, seeded, quality, lowPower, refs, renderer } = R;
+  const mob = quality.mobile, lite = lowPower || mob;
+  const C3 = h => new THREE.Color(h);
+  const ease = (x,t,dt,rate=2.6) => x + (t-x)*Math.min(1, dt*rate);
+  const sky = refs.sky || {};
+
+  /* =====================================================================
+     SKY: phase from the clock, shared uniforms for the outside
+     ===================================================================== */
+  const U = { day:{value:0}, night:{value:0} };
+  const GLSL = [
+    "vec3 ac = outgoingLight; float al = dot(ac, vec3(.299,.587,.114));",
+    // night: deeper and bluer; bright texels (lit windows, string lights) keep their light
+    "ac = mix(ac, ac*mix(vec3(.52,.54,.74), vec3(1.0), smoothstep(.42,.85,al)), uNight);",
+    // day: lights read as glass, colours half desaturated and lifted, then hazed by distance
+    "vec3 dc = vec3(.22,.235,.27) + mix(vec3(al), ac, .78)*1.4; dc = min(dc, vec3(.93)); dc = mix(dc, vec3(.76,.83,.91), uHaze);",
+    "ac = mix(ac, dc, uDay);",
+    "gl_FragColor = vec4( ac, diffuseColor.a );"].join("\n");
+  function patch(m, haze){
+    if(!m || !m.isMeshBasicMaterial || m.userData.amb) return;
+    const uHaze = { value:haze }; m.userData.amb = { uHaze };
+    m.onBeforeCompile = sh => {
+      sh.uniforms.uDay = U.day; sh.uniforms.uNight = U.night; sh.uniforms.uHaze = uHaze;
+      sh.fragmentShader = "uniform float uDay;\nuniform float uNight;\nuniform float uHaze;\n" + sh.fragmentShader.replace("gl_FragColor = vec4( outgoingLight, diffuseColor.a );", GLSL)   // r128 has no output_fragment chunk yet;
+    };
+    m.needsUpdate = true;
+  }
+  // the city: far layers take more haze; the sky plane only darkens at night (the day sky is its own plane)
+  (sky.layers||[]).forEach(p=>{ const z=p.position.z; patch(p.material, z<-20 ? .5 : z<-12 ? .3 : .12); });
+  if(sky.clouds) patch(sky.clouds.material, .8);
+  if(sky.plane){ patch(sky.plane.material, 0); }
+  // people across the street: additive glows fade by day, everything else is patched
+  const fades = [];
+  const outGrp = scene.getObjectByName("outside");
+  if(outGrp) outGrp.children.forEach((grp,gi)=>grp.traverse(o=>{
+    if(!o.material) return; const ms = Array.isArray(o.material) ? o.material : [o.material];
+    ms.forEach(m=>{ if(m.blending===THREE.AdditiveBlending){ if(!fades.includes(m)){ m.userData.op0=m.opacity; fades.push(m); } } else patch(m, gi ? .08 : .03); });
+  }));
+  if(sky.toggles){ sky.toggles.material.userData.op0 = sky.toggles.material.opacity; fades.push(sky.toggles.material); }
+
+  // the day sky: a second plane just in front of the dusk one, faded in
+  let daySky = null;
+  if(sky.plane){
+    const S = sky.SKY, Y = y => ((S.cy+S.H/2)-y)/S.H;
+    const t = canvasTex(32,256,(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h);
+      gr.addColorStop(0,"#3f78bd"); gr.addColorStop(Y(9),"#5f93cf"); gr.addColorStop(Y(5),"#94bce2"); gr.addColorStop(Y(sky.HOR+.4),"#d4e3ee");
+      gr.addColorStop(Y(sky.HOR-.6),"#e8eef0"); gr.addColorStop(1,"#aab6c0"); g.fillStyle=gr; g.fillRect(0,0,w,h); });
+    daySky = new THREE.Mesh(new THREE.PlaneGeometry(S.W,S.H), new THREE.MeshBasicMaterial({ map:t, transparent:true, opacity:0, depthWrite:false, toneMapped:false, fog:false }));
+    daySky.position.set(S.cx,S.cy,S.z+.05); daySky.renderOrder=-9.5; daySky.visible=false; sky.plane.parent.add(daySky);
+  }
+  if(sky.stars){ sky.stars.material.transparent=true; }
+  if(sky.moon){ sky.moon.material.userData.op0 = sky.moon.material.opacity; }
+
+  // room light per look: [evening, night, day]
+  const moonL = refs.moonLight, winGlow = refs.winGlow, hemi = refs.hemi, amb = refs.ambient, pools = refs.ceilPools||[];
+  const base = {
+    moonC: moonL ? moonL.color.clone() : C3(0xa9b4ff), moonI: moonL ? moonL.intensity : 1.5,
+    winC: winGlow ? winGlow.color.clone() : C3(0xc69cff), winI: winGlow ? winGlow.intensity : .9,
+    hemiS: hemi ? hemi.color.clone() : C3(0x5a66c0), hemiG: hemi ? hemi.groundColor.clone() : C3(0x2a1a12), hemiI: hemi ? hemi.intensity : .42,
+    ambI: amb ? amb.intensity : .16, exp: renderer.toneMappingExposure, pool: pools[2] ? pools[2].op : .035,
+  };
+  const DAY = { moonC:C3(0xfff0d8), moonI:2.7, winC:C3(0xdce6ff), winI:1.45, hemiS:C3(0xa9bce6), hemiG:C3(0x4c3626), hemiI:base.hemiI+.65, ambI:base.ambI+.18, exp:base.exp+.1, pool:.07 };
+  const NIGHT = { moonI:base.moonI*.85, winI:base.winI*.8, hemiI:base.hemiI-.05, exp:base.exp-.04 };
+  const poolC0 = pools[2] ? pools[2].mat.color.clone() : null, poolDay = C3(0xffd9a8);
+
+  function phaseNow(){ const d=new Date(), h=d.getHours()+d.getMinutes()/60; return h>=7 && h<17.5 ? "day" : (h>=20 || h<5) ? "night" : "evening"; }
+  const MODES = ["auto","day","evening","night"];
+  const A = { mode:"auto", phase:phaseNow(), day:0, night:0, lamp:1, lampT:1, ceil:0, ceilT:0, rain:0, rainT:1 };
+  try{ const q=new URLSearchParams(location.search).get("sky"); if(MODES.includes(q)) A.mode=q; }catch(e){}
+  const phase = () => A.mode==="auto" ? phaseNow() : A.mode;
+  A.phase = phase(); A.day = A.phase==="day" ? 1 : 0; A.night = A.phase==="night" ? 1 : 0;   // no fade on the first frame
+
+  /* =====================================================================
+     LIGHTS: the desk lamp, a light switch and the ceiling light
+     ===================================================================== */
+  const lamp = refs.lamp, lampL = refs.lampLight, lampParts = [];
+  const lampI0 = lampL ? lampL.intensity : 2.5;
+  if(lamp) lamp.traverse(o=>{ const m=o.material; if(!m) return;
+    if(m.emissive && m.emissiveIntensity>0 && m.emissive.getHex()!==0) lampParts.push({ m, kind:"shade", e0:m.emissiveIntensity });
+    else if(m.isMeshBasicMaterial) lampParts.push({ m, kind:"bulb", c0:m.color.clone() }); });
+  const bulbOff = C3(0x4a4440);
+  function toggleLamp(){ A.lampT = A.lampT>.5 ? 0 : 1; }
+  if(lamp) R.interactive(lamp, { get label(){ return A.lampT>.5 ? "Desk lamp · turn off" : "Desk lamp · turn on"; }, onClick:toggleLamp });
+
+  // ceiling light: the fixture is in shell.js (switched off); a warm point light under it on larger screens
+  const ceil = refs.ceilingLight;
+  let ceilL = null;
+  if(ceil && !lite){ ceilL = new THREE.PointLight(0xffdcb4, 0, 9, 2); ceilL.position.set(0,-.2,0); ceil.group.add(ceilL); }
+  const domeOn = C3(0xffe2bd);
+  function toggleCeiling(){ A.ceilT = A.ceilT>.5 ? 0 : 1; }
+
+  // the switch: a slim plate on the back wall, right of the window, with a rocker that flips
+  const sw = new THREE.Group(); sw.position.set(-1.08,1.3,-4); scene.add(sw);
+  const plateM = mat(0xe8e6f0,{roughness:.38, envMapIntensity:.7});
+  rbox(sw,.082,.122,.012,.004,plateM,0,0,.006,false);
+  const rocker = rbox(sw,.03,.05,.012,.004,mat(0xf4f2fa,{roughness:.3}),0,0,.015,false);
+  const led = new THREE.Mesh(new THREE.CircleGeometry(.0035,12), new THREE.MeshBasicMaterial({color:0xffb86b, toneMapped:false}));
+  led.position.set(0,-.044,.0125); sw.add(led);
+  R.contactShadow(sw,.1,.14,0,0,0,.35,{soft:.6}).rotation.x=0;
+  const swHit = new THREE.Mesh(new THREE.PlaneGeometry(.16,.2), new THREE.MeshBasicMaterial()); swHit.visible=false; swHit.position.z=.02; sw.add(swHit);
+  R.interactive(sw, { get label(){ return A.ceilT>.5 ? "Light switch · lights off" : "Light switch · lights on"; }, onClick:toggleCeiling });
+
+  /* =====================================================================
+     RAIN: drops on the glass, streaks outside, sound
+     ===================================================================== */
+  const glass = refs.glass;
+  let dropsTex=null, dropsM=null, streaks=[];
+  const rnd = seeded(808);
+  try{ const v=store.get("ts-rain"); if(v==="off") A.rainT=0; }catch(e){}
+  A.rain = A.rainT;
+  if(glass){
+    const DW = mob ? 256 : 512, DH = Math.round(DW*glass.h/glass.w);
+    const still = document.createElement("canvas"); still.width=DW; still.height=DH; const sg=still.getContext("2d");
+    const px = DW/glass.w;                                    // pixels per metre
+    function drop(g,x,y,r,a=1){
+      g.fillStyle=`rgba(190,200,235,${.16*a})`; g.beginPath(); g.ellipse(x,y,r,r*1.12,0,0,7); g.fill();
+      g.fillStyle=`rgba(10,12,30,${.22*a})`; g.beginPath(); g.ellipse(x,y+r*.35,r*.82,r*.6,0,0,Math.PI); g.fill();
+      g.fillStyle=`rgba(255,255,255,${.55*a})`; g.beginPath(); g.arc(x-r*.32,y-r*.38,Math.max(.6,r*.26),0,7); g.fill();
+    }
+    const sprinkle = n => { for(let i=0;i<n;i++){ const r=(.6+Math.pow(rnd(),2.2)*2.6)*px/300; drop(sg, rnd()*DW, rnd()*DH, Math.max(.7,r*DW/512*1.6)); } };
+    sprinkle(mob?220:520);
+    const runners = Array.from({length:mob?6:11}, ()=>({ x:rnd()*DW, y:-rnd()*DH, v:0, r:0, wait:rnd()*4, trail:[] }));
+    const reset = d => { d.x=rnd()*DW; d.y=rnd()*DH*.45; d.v=0; d.r=(1.6+rnd()*1.6)*DW/512; d.wait=1+rnd()*6; d.trail.length=0; };
+    runners.forEach(reset);
+    dropsTex = canvasTex(DW,DH,(g,w,h)=>{
+      g.clearRect(0,0,w,h); g.drawImage(still,0,0);
+      runners.forEach(d=>{ if(d.wait>0) return;
+        if(d.trail.length>1){ g.strokeStyle="rgba(200,210,240,.14)"; g.lineWidth=d.r*.9; g.lineCap="round"; g.beginPath(); g.moveTo(d.trail[0][0],d.trail[0][1]); d.trail.forEach(p=>g.lineTo(p[0],p[1])); g.stroke(); }
+        drop(g,d.x,d.y,d.r,1.2); });
+    });
+    let acc = 0;
+    function stepDrops(dt){
+      acc += dt; if(acc < (mob ? .1 : .06)) return; const s=acc; acc=0;
+      runners.forEach(d=>{
+        if(d.wait>0){ d.wait-=s; return; }
+        d.v = Math.min(d.v + s*(40+rnd()*60)*DW/512, (55+d.r*9)*DW/512);
+        if(rnd()<.08) d.v*=.25;                               // drops stick for a moment, then let go
+        const ny = d.y + d.v*s, nx = d.x + (rnd()-.5)*1.2;
+        sg.save(); sg.globalCompositeOperation="destination-out"; sg.fillStyle="rgba(0,0,0,.9)"; sg.beginPath(); sg.ellipse(nx,ny,d.r*1.3,d.r*1.6,0,0,7); sg.fill(); sg.restore();  // it picks up the drops it passes
+        d.trail.push([nx,ny]); if(d.trail.length>40) d.trail.shift();
+        if(rnd()<.06) drop(sg, nx+(rnd()-.5)*d.r, ny-d.r*2, d.r*.45);   // and leaves a few tiny ones behind
+        d.x=nx; d.y=ny; if(d.y>DH+10) reset(d);
+      });
+      if(rnd()<.6) sprinkle(mob?1:2);                          // new drops land
+      R.redraw(dropsTex);
+    }
+    dropsM = new THREE.MeshBasicMaterial({ map:dropsTex, transparent:true, opacity:0, depthWrite:false, toneMapped:false, fog:false });
+    const dm = new THREE.Mesh(new THREE.PlaneGeometry(glass.w,glass.h), dropsM);
+    dm.position.set(glass.cx, glass.cy, glass.z-.008); dm.renderOrder=1.8; dm.visible=false; scene.add(dm);
+    A._drops = { mesh:dm, step:stepDrops };
+
+    // falling rain: a tiling streak texture scrolled down on two planes at different depths
+    const streakImg = canvasTex(128,256,(g,w,h)=>{ g.clearRect(0,0,w,h); const r=seeded(31);
+      for(let i=0;i<46;i++){ const x=r()*w, y=r()*h, L=18+r()*46, a=.12+r()*.32, gr=g.createLinearGradient(0,y,0,y+L);
+        gr.addColorStop(0,"rgba(220,228,255,0)"); gr.addColorStop(1,`rgba(220,228,255,${a})`); g.strokeStyle=gr; g.lineWidth=1+r()*.8;
+        for(const dy of [-h,0,h]){ g.beginPath(); g.moveTo(x,y+dy); g.lineTo(x-L*.06,y+L+dy); g.stroke(); } } },{repeat:[1,1]});
+    [[-5.3, 6.2,4.6, -2.9,2.2, [3,1.6], 1.0, 1.25],[-9.5, 13,10, -3.6,2.4, [7,3], .55, .8]].forEach(([z,w,h,x,y,rep,op,speed])=>{
+      if(mob && z<-9) return;
+      const t = streakImg.clone(); t.needsUpdate=true; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(rep[0],rep[1]);
+      const m = new THREE.MeshBasicMaterial({ map:t, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false, fog:false });
+      const p = new THREE.Mesh(new THREE.PlaneGeometry(w,h), m); p.position.set(x,y,z); p.rotation.z=.05; p.renderOrder=-2; p.visible=false; scene.add(p);
+      streaks.push({ p, m, t, op, speed });
+    });
+    // click the window to start or stop the rain
+    R.interactive(glass.mesh, { get label(){ return A.rainT>.5 ? "Window · stop the rain" : "Window · make it rain"; }, onClick:toggleRain });
+  }
+  function toggleRain(){ A.rainT = A.rainT>.5 ? 0 : 1; store.set("ts-rain", A.rainT ? "on" : "off"); if(typeof ROOM_AUDIO!=="undefined") ROOM_AUDIO.rain(!!A.rainT); }
+  if(typeof ROOM_AUDIO!=="undefined") ROOM_AUDIO.rain(!!A.rainT);
+
+  /* =====================================================================
+     apply: every frame while something is still easing, once otherwise
+     ===================================================================== */
+  const tmpC = new THREE.Color();
+  let settled = false;
+  function apply(){
+    const d=A.day, n=A.night*(1-d), k=1-d;
+    U.day.value=d; U.night.value=n;
+    if(daySky){ daySky.material.opacity=d; daySky.visible=d>.002; }
+    if(sky.stars){ sky.stars.material.opacity=k*(1+.0*n); sky.stars.visible=k>.01; }
+    if(sky.moon){ sky.moon.material.opacity=sky.moon.material.userData.op0*k; sky.moon.visible=k>.01; }
+    if(sky.glows) sky.glows.visible = d<.5;
+    fades.forEach(m=>{ m.opacity = m.userData.op0*(1-.85*d)*(1+.25*n); });
+    if(moonL){ moonL.color.copy(base.moonC).lerp(DAY.moonC,d); moonL.intensity = base.moonI + (NIGHT.moonI-base.moonI)*n + (DAY.moonI-base.moonI)*d; }
+    if(winGlow){ winGlow.color.copy(base.winC).lerp(DAY.winC,d); winGlow.intensity = base.winI + (NIGHT.winI-base.winI)*n + (DAY.winI-base.winI)*d; }
+    const ceilFill = lite ? .5*A.ceil : 0;                    // phones: the ceiling light raises the fill instead
+    if(hemi){ hemi.color.copy(base.hemiS).lerp(DAY.hemiS,d); hemi.groundColor.copy(base.hemiG).lerp(DAY.hemiG,d);
+      hemi.intensity = base.hemiI + (NIGHT.hemiI-base.hemiI)*n + (DAY.hemiI-base.hemiI)*d + ceilFill; }
+    if(amb) amb.intensity = base.ambI + (DAY.ambI-base.ambI)*d + .1*A.ceil;
+    renderer.toneMappingExposure = base.exp + (NIGHT.exp-base.exp)*n + (DAY.exp-base.exp)*d;
+    if(pools[2]){ pools[2].mat.opacity = base.pool + (DAY.pool-base.pool)*d; pools[2].mat.color.copy(poolC0).lerp(poolDay,d); }
+    // lamp
+    if(lampL) lampL.intensity = lampI0*A.lamp;
+    lampParts.forEach(p=>{ if(p.kind==="shade") p.m.emissiveIntensity = p.e0*(.06+.94*A.lamp); else p.m.color.copy(bulbOff).lerp(p.c0, A.lamp); });
+    if(pools[1]) pools[1].mat.opacity = pools[1].op*A.lamp;
+    // ceiling
+    if(ceilL) ceilL.intensity = 2.3*A.ceil;
+    if(ceil) ceil.dome.material.emissive.copy(ceil.emissive).lerp(domeOn, A.ceil);
+    rocker.rotation.x = (A.ceilT>.5 ? -.22 : .22);
+    led.material.color.setHex(A.ceilT>.5 ? 0x6b6b70 : 0xffb86b);
+    // rain
+    if(dropsM){ dropsM.opacity = A.rain*(.85+.25*d); A._drops.mesh.visible = A.rain>.01; }
+    streaks.forEach(s=>{ s.m.opacity = s.op*A.rain*(1-.45*d); s.p.visible = A.rain>.01; });
+  }
+  apply();
+
+  R.onFrame((now, dt)=>{
+    dt = Math.min(dt||0, .1);
+    const ph = phase(); if(ph!==A.phase){ A.phase=ph; settled=false; paintBtn(); }
+    const td = ph==="day"?1:0, tn = ph==="night"?1:0;
+    const moving = Math.abs(A.day-td)>.001 || Math.abs(A.night-tn)>.001 || Math.abs(A.lamp-A.lampT)>.001 || Math.abs(A.ceil-A.ceilT)>.001 || Math.abs(A.rain-A.rainT)>.001;
+    if(moving){
+      A.day=ease(A.day,td,dt,reduced?40:1.6); A.night=ease(A.night,tn,dt,reduced?40:1.6);
+      A.lamp=ease(A.lamp,A.lampT,dt,14); A.ceil=ease(A.ceil,A.ceilT,dt,9); A.rain=ease(A.rain,A.rainT,dt,2);
+      if(Math.abs(A.day-td)<.002) A.day=td; if(Math.abs(A.night-tn)<.002) A.night=tn;
+      if(Math.abs(A.lamp-A.lampT)<.002) A.lamp=A.lampT; if(Math.abs(A.ceil-A.ceilT)<.002) A.ceil=A.ceilT; if(Math.abs(A.rain-A.rainT)<.002) A.rain=A.rainT;
+      apply(); settled=false;
+    } else if(!settled){ apply(); settled=true; }
+    if(A.rain>.01){
+      if(A._drops && !reduced) A._drops.step(dt);
+      if(!reduced) streaks.forEach(s=>{ s.t.offset.y = (s.t.offset.y + dt*s.speed) % 1; });
+    }
+  });
+  // the clock moves on: look again every minute (onFrame already compares, this just keeps phaseNow cheap)
+
+  /* =====================================================================
+     the Sky button (shell.html #skybtn): auto, day, evening, night
+     ===================================================================== */
+  const btn = document.getElementById("skybtn");
+  const NAMES = { day:"Daytime", evening:"Evening", night:"Night" };
+  function paintBtn(){
+    if(!btn) return;
+    btn.dataset.phase = A.phase; btn.dataset.mode = A.mode;
+    const now = NAMES[A.phase], next = MODES[(MODES.indexOf(A.mode)+1)%MODES.length];
+    const say = A.mode==="auto" ? `Sky: ${now}, from your local time` : `Sky: ${now}`;
+    const nxt = next==="auto" ? "follow your local time" : "show "+NAMES[next].toLowerCase();
+    btn.setAttribute("aria-label", `${say}. Change to ${nxt}`); btn.title = `${say}. Click to ${nxt}.`;
+    const t = btn.querySelector(".st"); if(t) t.textContent = A.mode==="auto" ? "Auto" : NAMES[A.phase];
+  }
+  function setMode(m){ if(!MODES.includes(m)) return; A.mode=m; A.phase=phase(); settled=false; paintBtn(); }
+  if(btn){
+    btn.addEventListener("click",()=>setMode(MODES[(MODES.indexOf(A.mode)+1)%MODES.length]));
+    const place=()=>{ const mb=document.getElementById("music"); if(mb && mb.offsetWidth) btn.style.setProperty("--music-w", mb.offsetWidth+"px"); };
+    place(); addEventListener("resize",place); R.fontsReady.then(place); setTimeout(place,1500);
+  }
+  paintBtn();
+
+  refs.ambience = { get mode(){ return A.mode; }, get phase(){ return A.phase; }, get lamp(){ return A.lampT>.5; }, get ceiling(){ return A.ceilT>.5; }, get rain(){ return A.rainT>.5; },
+    setMode, toggleLamp, toggleCeiling, toggleRain, switchAt:sw.position.clone() };
+}});
+
 /* ==== room/board.js ==== */
 /* =====================================================================
    PINBOARD on the back wall = Experience.
@@ -10177,7 +10485,7 @@ ROOM_PARTS.push({ name:"decor", order:50, build(R){
   const ngM=additive(neonGlow,1); ngM.toneMapped=false;
   const ng = new THREE.Mesh(new THREE.PlaneGeometry(NG_W,NG_H), ngM); ng.position.z=-.0365; ng.renderOrder=1; neon.add(ng);
   // its light: a violet wash down onto the couch back and seat, and on the wall around the sign
-  const NEON_I=1.5, neonL = new THREE.PointLight(new THREE.Color(.64,.42,1.0), NEON_I, 3.5, 2); neonL.position.set(0,-.12,.35); neon.add(neonL);
+  const NEON_I=1.5, neonL = new THREE.PointLight(new THREE.Color(.64,.42,1.0), NEON_I, 3.5, 2); neonL.position.set(0,-.12,.35); neon.add(neonL); neonL.userData.optional=true;   // phones: the wall glow sprite carries it
   // a rare, short flicker (never with reduced motion)
   { let next=performance.now()+9000+Math.random()*9000, until=0;
     R.onFrame(now=>{
@@ -10500,6 +10808,7 @@ ROOM_PARTS.push({ name:"desk", order:20, build(R){
   // is in front of it and leaves its own stand (below and behind the glass) in shadow
   const monGlow = new THREE.SpotLight(0xa59cff,1.2,2.8,1.2,.7,2); monGlow.position.set(MON.x,MON.y,MON.z+.03);
   monGlow.target.position.set(MON.x,MON.y-.35,MON.z+1); scene.add(monGlow,monGlow.target);
+  monGlow.userData.optional=true;   // phones: one light fewer in every shader (the screen's own glow and the ceiling pool stay)
   R.dock.projects = ()=>({ t:V(MON.x,MON.y,MON.z), n:V(0,0,1), w:SW+.08, h:SH+.08 });
   R.anchors.projects = ()=>V(MON.x,MON.y+SH/2+.17,MON.z);
   R.refs.monitor = monitor; R.refs.screenTex = screenTex;
@@ -13886,7 +14195,8 @@ ROOM_PARTS.push({ name:"monitor-fit", order:95, build(R){
    the city at dusk outside it, and the global light (fill + moonlight through the window).
    Layout: back wall inner face z=-4 (window opening x[-4.2,-1.6] y[1.0,3.1], reveal 0.22 deep), side walls at x=±5,
    floor y=0, ceiling y=3.7, the open side is z=+4.
-   Refs: R.refs.window {x0,x1,y0,y1,sillTop,sillFront}, R.refs.moonLight, R.refs.ceiling (height). */
+   Refs: R.refs.window {x0,x1,y0,y1,sillTop,sillFront}, R.refs.moonLight, R.refs.ceiling (height), and for room/ambience.js:
+   R.refs.sky {plane,tex,stars,moon,clouds,layers,glows,toggles}, glass, ceilPools, ceilingLight, winGlow, hemi, ambient. */
 ROOM_PARTS.push({ name:"shell", order:10, build(R){
   const { THREE, scene, V, mat, add, box, rbox, cyl, sph, canvasTex, tex, pbr, lowPower } = R;
   const batch = { jamb:[], skin:[], trim:[], frame:[], rad:[], chrome:[], rod:[] };   // merged into one mesh each at the end
@@ -13955,9 +14265,9 @@ ROOM_PARTS.push({ name:"shell", order:10, build(R){
   [ [ .7,-2.65, 5.0,2.7, 0x8f86ff, .045 ],                    // monitor, robot face and neon: cool lavender
     [-.65,-3.2, 2.2,1.6, 0xffb070, .035 ],                    // the desk lamp's pool on the desk
     [-2.5,-2.4, 3.8,3.2, 0x8c9cff, .035 ] ]                   // moonlight on the floor under the window
-    .forEach(([x,z,w,d,col,op])=>{
+    .forEach(([x,z,w,d,col,op],i)=>{
       const m=new THREE.MeshBasicMaterial({ map:poolTex, color:col, transparent:true, opacity:op, blending:THREE.AdditiveBlending, depthWrite:false, fog:false, polygonOffset:true, polygonOffsetFactor:-1, polygonOffsetUnits:-4 });
-      const pl=new THREE.Mesh(new THREE.PlaneGeometry(w,d), m); pl.rotation.x=Math.PI/2; pl.position.set(x,H-.004,z); pl.renderOrder=1; pl.name="ceilingBounce"; scene.add(pl); });
+      const pl=new THREE.Mesh(new THREE.PlaneGeometry(w,d), m); pl.rotation.x=Math.PI/2; pl.position.set(x,H-.004,z); pl.renderOrder=1; pl.name="ceilingBounce"; scene.add(pl); (R.refs.ceilPools=R.refs.ceilPools||[])[i]={ mat:m, op }; });
 
   // window reveal (jambs + head), same plaster
   const revealM = wallM.clone(); revealM.vertexColors=false; revealM.color.setHex(0xe4e3f0);
@@ -14007,7 +14317,7 @@ ROOM_PARTS.push({ name:"shell", order:10, build(R){
   const glassM = new THREE.MeshPhysicalMaterial({ color:0x0b0c18, metalness:0, roughness:.1, transmission:1, transparent:true, envMapIntensity:2.2, depthWrite:false });
   // point lights would make hard sparkles on the pane: drop direct specular, keep the softer environment reflection
   glassM.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace("#include <lights_fragment_end>", "#include <lights_fragment_end>\n\treflectedLight.directSpecular *= 0.0;"); };
-  const glass = add(scene,new THREE.PlaneGeometry(W.x1-W.x0,W.y1-sillTop),glassM,W.cx,(W.y1+sillTop)/2,fz-.005,false); glass.renderOrder=2;
+  const glass = add(scene,new THREE.PlaneGeometry(W.x1-W.x0,W.y1-sillTop),glassM,W.cx,(W.y1+sillTop)/2,fz-.005,false); glass.renderOrder=2; R.refs.glass={ mesh:glass, z:fz-.005, w:W.x1-W.x0, h:W.y1-sillTop, cx:W.cx, cy:(W.y1+sillTop)/2 };
   // a faint diagonal sheen so the pane reads as glass even where nothing bright reflects in it
   const sheenTex = canvasTex(256,256,(g,w,h)=>{ g.clearRect(0,0,w,h); [[.18,.22,.05],[.42,.08,.03],[.7,.3,.04]].forEach(([c,wd,a])=>{ const gr=g.createLinearGradient(0,0,w,h); gr.addColorStop(Math.max(0,c-wd),"rgba(255,255,255,0)"); gr.addColorStop(c,`rgba(225,215,255,${a})`); gr.addColorStop(Math.min(1,c+wd),"rgba(255,255,255,0)"); g.fillStyle=gr; g.fillRect(0,0,w,h); }); });
   const sheen = add(scene,new THREE.PlaneGeometry(W.x1-W.x0,W.y1-sillTop),new THREE.MeshBasicMaterial({map:sheenTex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false,fog:false}),W.cx,(W.y1+sillTop)/2,fz-.003,false); sheen.renderOrder=3;
@@ -14086,12 +14396,13 @@ ROOM_PARTS.push({ name:"shell", order:10, build(R){
     gr.addColorStop(Y(3),"#7e3f7c"); gr.addColorStop(Y(2.2),"#c05f80"); gr.addColorStop(Y(HOR+.2),"#ee9472"); gr.addColorStop(Y(HOR-.4),"#f4ad7a"); gr.addColorStop(Y(-2),"#6a3a5a"); gr.addColorStop(1,"#20142a");
     g.fillStyle=gr; g.fillRect(0,0,w,h);
   });
-  plane(SKY.W,SKY.H,outside(skyTex,{transparent:false,depthWrite:true}),SKY.cx,SKY.cy,SKY.z,-10);
+  const skyPlane = plane(SKY.W,SKY.H,outside(skyTex,{transparent:false,depthWrite:true}),SKY.cx,SKY.cy,SKY.z,-10);
+  const sky = R.refs.sky = { plane:skyPlane, tex:skyTex, SKY, HOR, layers:[] };
   // stars
   (function stars(){ const r=seeded(77), n=lowPower?90:160, pos=new Float32Array(n*3), col=new Float32Array(n*3);
     for(let i=0;i<n;i++){ const y=4.2+Math.pow(r(),.8)*9.5; pos[i*3]=SKY.cx-SKY.W/2+r()*SKY.W; pos[i*3+1]=y; pos[i*3+2]=0; const b=(.35+r()*.65)*Math.min(1,(y-4.2)/2.5); col[i*3]=b; col[i*3+1]=b*.95; col[i*3+2]=b*(.9+r()*.2); }
     const g=new THREE.BufferGeometry(); g.setAttribute("position",new THREE.BufferAttribute(pos,3)); g.setAttribute("color",new THREE.BufferAttribute(col,3));
-    const pts=new THREE.Points(g,new THREE.PointsMaterial({size:1.6,sizeAttenuation:false,vertexColors:true,transparent:true,depthWrite:false,toneMapped:false,fog:false})); pts.position.z=SKY.z+.2; pts.renderOrder=-9; city.add(pts); })();
+    const pts=new THREE.Points(g,new THREE.PointsMaterial({size:1.6,sizeAttenuation:false,vertexColors:true,transparent:true,depthWrite:false,toneMapped:false,fog:false})); pts.position.z=SKY.z+.2; pts.renderOrder=-9; city.add(pts); sky.stars=pts; })();
   // moon with a soft halo
   const moonTex = canvasTex(256,256,(g,w,h)=>{
     const c=w/2, R0=w*.16;
@@ -14099,14 +14410,14 @@ ROOM_PARTS.push({ name:"shell", order:10, build(R){
     const body=g.createRadialGradient(c-R0*.3,c-R0*.3,R0*.1,c,c,R0); body.addColorStop(0,"#fff6ea"); body.addColorStop(1,"#f1d7c4"); g.fillStyle=body; g.beginPath(); g.arc(c,c,R0,0,7); g.fill();
     const r=seeded(91); g.save(); g.beginPath(); g.arc(c,c,R0,0,7); g.clip(); for(let i=0;i<14;i++){ g.fillStyle=`rgba(170,130,130,${.08+r()*.12})`; g.beginPath(); g.arc(c+(r()-.5)*R0*1.5,c+(r()-.5)*R0*1.5,R0*(.08+r()*.22),0,7); g.fill(); } g.restore();
   });
-  plane(4.6,4.6,outside(moonTex),-14.6,4.9,-29.2,-8);
+  sky.moon = plane(4.6,4.6,outside(moonTex),-14.6,4.9,-29.2,-8);
   // drifting clouds, lit from below by the city
   const cloudTex = canvasTex(1024,256,(g,w,h)=>{ const r=seeded(63);
     for(let i=0;i<120;i++){ const x=r()*w, y=h*(.3+r()*.55), rx=40+r()*170, ry=6+r()*16, a=.03+r()*.07;
       for(const dx of [-w,0,w]){ g.save(); g.translate(x+dx,y); g.scale(1,ry/rx); const gr=g.createRadialGradient(0,0,0,0,0,rx); const pink=r()<.5;
         gr.addColorStop(0,pink?`rgba(240,150,170,${a})`:`rgba(150,120,200,${a})`); gr.addColorStop(1,"rgba(150,120,200,0)"); g.fillStyle=gr; g.beginPath(); g.arc(0,0,rx,0,7); g.fill(); g.restore(); } }
   },{repeat:[1,1]});
-  plane(56,6,outside(cloudTex),-16,6.4,-27.5,-7);
+  sky.clouds = plane(56,6,outside(cloudTex),-16,6.4,-27.5,-7);
 
   // building layers (canvas silhouettes with windows); positions of a few things are recorded for live lights
   const beacons=[], toggles=[];
@@ -14177,7 +14488,7 @@ ROOM_PARTS.push({ name:"shell", order:10, build(R){
       if(L.street){ const r2=seeded(L.seed+9); for(let i=0;i<L.street[2];i++){ const xw=L.cx-L.W/2+r2()*L.W, yw=L.street[0]+r2()*(L.street[1]-L.street[0]); g.fillStyle=r2()<.8?"rgba(255,196,128,.85)":"rgba(255,240,220,.9)"; g.fillRect(X(xw),Y(yw),Math.max(1,sx*.05),Math.max(1,sy*.035)); } }
     });
     // buildings write depth (empty texels are discarded) so beacons and windows further back are hidden by nearer blocks
-    return plane(L.W,L.H,outside(t,{depthWrite:true,alphaTest:.03}),L.cx,L.cy,L.z,L.order);
+    const lp = plane(L.W,L.H,outside(t,{depthWrite:true,alphaTest:.03}),L.cx,L.cy,L.z,L.order); sky.layers.push(lp); return lp;
   }
   layer({ seed:5,  order:-6, z:-23,  W:42, H:16, cx:-14, cy:0,  px:[1024,512], body:[62,42,88], sky:[[120,70,140],[220,120,140]], rim:"250,170,170", dark:"44,32,70", mix:[.5,.3], bw:[.8,2.2], top:[.1,2.0], towers:.1, extra:2.0, gap:.4, floor:.17, col:.13, lit:.3, beacons:.05, beaconSize:.32, haze:[.5,3,-2,.15], hazeCol:"226,128,146" });
   layer({ seed:9,  order:-5, z:-15,  W:26, H:14, cx:-9,  cy:0,  px:[1024,512], body:[36,27,60], sky:[[90,60,140],[190,100,150]], rim:"236,150,176", dark:"28,22,50", mix:[.4,.35], bw:[.7,1.7], top:[0,2.6], towers:.14, extra:2.2, gap:.35, floor:.17, col:.12, lit:.4, beacons:.12, beaconSize:.26, haze:[.28,2,-4], hazeCol:"170,90,130", focus:[-12.5,-5.5,2.2,2.6], street:[-4.5,-1.5,110] });
@@ -14188,10 +14499,11 @@ ROOM_PARTS.push({ name:"shell", order:10, build(R){
   const plan = [{x:-30,y:7.4,z:-26.5,c:[1,.25,.25],s:.32},{x:-30.35,y:7.38,z:-26.5,c:[.3,1,.4],s:.26},{x:-30.18,y:7.42,z:-26.5,c:[1,1,1],s:.5}];
   const glows = beacons.concat(plan);
   const gm = new THREE.InstancedMesh(new THREE.PlaneGeometry(1,1), outside(glowTex,{blending:THREE.AdditiveBlending}), glows.length);
-  gm.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(glows.length*3),3); gm.frustumCulled=false; gm.renderOrder=-3; city.add(gm);
+  gm.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(glows.length*3),3); gm.frustumCulled=false; gm.renderOrder=-3; city.add(gm); sky.glows=gm;
   const tm = toggles.length ? new THREE.InstancedMesh(new THREE.PlaneGeometry(1,1), new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false,fog:false}), toggles.length) : null;
   const m4=new THREE.Matrix4(), q0=new THREE.Quaternion(), cTmp=new THREE.Color();
   if(tm){ tm.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(toggles.length*3),3); toggles.forEach((t,i)=>{ m4.compose(V(t.x,t.y,t.z),q0,V(t.w,t.h,1)); tm.setMatrixAt(i,m4); t.on=Math.random()<.4; t.col=[[1,.78,.52],[.8,.85,1],[.74,.66,1]][Math.random()*3|0]; }); tm.frustumCulled=false; tm.renderOrder=-3; city.add(tm); }
+  sky.toggles=tm;
   const setToggle=(i)=>{ const t=toggles[i], k=t.on?.92:0; tm.instanceColor.setXYZ(i,t.col[0]*k,t.col[1]*k,t.col[2]*k); };
   toggles.forEach((t,i)=>setToggle(i)); if(tm) tm.instanceColor.needsUpdate=true;
   let nextToggle = 0, planeT = 0;
@@ -14213,6 +14525,7 @@ ROOM_PARTS.push({ name:"shell", order:10, build(R){
   cyl(fix,.07,.07,.02,mat(0xd8d6e6,{roughness:.5}),0,-.01,0,24).castShadow=false;
   const dome = add(fix,new THREE.SphereGeometry(.2,32,12,0,Math.PI*2,Math.PI/2,Math.PI/2),new THREE.MeshPhysicalMaterial({color:0xe9e6f4,roughness:.35,clearcoat:.6,emissive:0x2a2440,envMapIntensity:.8}),0,-.025,0,false);
   dome.scale.y=.45; dome.material.side=THREE.DoubleSide;
+  R.refs.ceilingLight = { group:fix, dome, emissive:dome.material.emissive.clone() };
 
   /* ---------------- batch the static pieces (fewer draw calls) ---------------- */
   R.merge(batch.jamb, revealM);
@@ -14236,10 +14549,10 @@ ROOM_PARTS.push({ name:"shell", order:10, build(R){
   // (a spot facing into the room, so it lights the sill, curtains and floor but leaves no highlight on the glass)
   // cosmetic: skipped on software GL and on phones (light budget), where the hemisphere fill is raised instead
   const lite = lowPower || R.quality.mobile;
-  const winGlow = new THREE.SpotLight(0xc69cff, .9, 5, 1.25, 1, 1.6); winGlow.position.set(W.cx,2.2,-4.05); winGlow.target.position.set(W.cx+.4,.3,-1.6); if(!lite) scene.add(winGlow, winGlow.target);
+  const winGlow = new THREE.SpotLight(0xc69cff, .9, 5, 1.25, 1, 1.6); winGlow.position.set(W.cx,2.2,-4.05); winGlow.target.position.set(W.cx+.4,.3,-1.6); if(!lite) scene.add(winGlow, winGlow.target); R.refs.winGlow=winGlow;
   // global fill: cool sky from above, warm wood bounce from below; the environment map adds directional fill
-  scene.add(new THREE.HemisphereLight(0x5a66c0, 0x2a1a12, lite ? .52 : .42));
-  if(!lite) scene.add(new THREE.AmbientLight(0x30345e, .16));
+  const hemi = new THREE.HemisphereLight(0x5a66c0, 0x2a1a12, lite ? .52 : .42); scene.add(hemi); R.refs.hemi=hemi;
+  if(!lite){ const amb=new THREE.AmbientLight(0x30345e, .16); scene.add(amb); R.refs.ambient=amb; }
 }});
 
 /* ==== room/speaker.js ==== */
